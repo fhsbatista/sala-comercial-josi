@@ -12,8 +12,6 @@ dist
 dist-ssr
 *.local
 .env
-data/
-*.sqlite
 *.sqlite-shm
 *.sqlite-wal
 
