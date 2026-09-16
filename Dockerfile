@@ -26,8 +26,8 @@ COPY server ./server
 COPY src/data ./src/data
 
 RUN mkdir -p /data
-COPY data/imoveis.sqlite /data/imoveis.sqlite
+COPY data/imoveis.sqlite /app/bootstrap/imoveis.sqlite
 
 EXPOSE 3001
 
-CMD ["node", "server/index.js"]
+CMD ["sh", "-c", "if [ ! -f \"$DATABASE_PATH\" ]; then cp /app/bootstrap/imoveis.sqlite \"$DATABASE_PATH\"; fi && exec node server/index.js"]

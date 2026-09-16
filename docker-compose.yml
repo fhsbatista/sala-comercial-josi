@@ -9,5 +9,8 @@ services:
       LOAD_LATITUDE: ${LOAD_LATITUDE:-}
       LOAD_LONGITUDE: ${LOAD_LONGITUDE:-}
     volumes:
-      - ./data:/data
+      - imoveis_data:/data
     restart: unless-stopped
+
+volumes:
+  imoveis_data:

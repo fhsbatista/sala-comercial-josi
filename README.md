@@ -106,15 +106,17 @@ docker compose up --build
 
 Acesse http://localhost:3001
 
-O banco fica em **`./data/imoveis.sqlite`** no projeto (montado em `/data` no container). Você pode editá-lo diretamente com DB Browser ou `sqlite3`; reinicie o container e recarregue a página após alterações manuais.
+No primeiro start, o volume Docker `imoveis_data` é inicializado com o banco versionado presente na imagem. Alterações feitas pela aplicação permanecem nesse volume entre recriações do container.
 
-Se você usava o volume Docker antigo (`imoveis_data`) e quer migrar os dados:
+Para copiar o banco do volume para o projeto e fazer backup:
 
 ```bash
+docker compose stop app
 docker compose cp app:/data/imoveis.sqlite ./data/imoveis.sqlite
-docker compose down
-docker compose up -d
+docker compose start app
 ```
+
+Use `docker compose down -v` somente quando quiser apagar o volume e reinicializá-lo a partir do banco da imagem.
 
 ## Hospedagem
 
