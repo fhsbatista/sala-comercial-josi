@@ -24,9 +24,9 @@ RUN npm ci --omit=dev
 COPY --from=build /app/dist ./dist
 COPY server ./server
 COPY src/data ./src/data
-COPY scripts ./scripts
 
 RUN mkdir -p /data
+COPY data/imoveis.sqlite /data/imoveis.sqlite
 
 EXPOSE 3001
 
