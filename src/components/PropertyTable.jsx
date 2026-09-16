@@ -4,10 +4,10 @@ import {
   formatArea,
   formatCurrency,
   formatDistancia,
-  formatGostei,
+  formatAvaliacao,
   getPrecoM2,
   getVerifyLabel,
-  isMuitoProximo,
+  isNearLoad,
   STATUS_LABEL,
 } from '../utils/imoveis.js'
 
@@ -32,7 +32,7 @@ export default function PropertyTable({ imoveis }) {
             <th>Aluguel</th>
             <th>Preço/m²</th>
             <th>Distância da LOAD</th>
-            <th>Gostei</th>
+            <th>Avaliação</th>
             <th>Status</th>
             <th className="property-table__col-actions">Ações</th>
           </tr>
@@ -40,7 +40,7 @@ export default function PropertyTable({ imoveis }) {
         <tbody>
           {imoveis.map((imovel) => {
             const precoM2 = getPrecoM2(imovel)
-            const highlight = isMuitoProximo(imovel)
+            const highlight = isNearLoad(imovel)
 
             return (
               <tr
@@ -48,7 +48,19 @@ export default function PropertyTable({ imoveis }) {
                 className={highlight ? 'property-table__row--highlight' : ''}
               >
                 <td>
-                  <div className="property-table__title">{imovel.descricao}</div>
+                  <div className="property-table__title">
+                    {imovel.avaliacao === 'gostei' && (
+                      <span className="avaliacao-icon avaliacao-icon--gostei" title="Gostei" aria-label="Gostei">
+                        ♥
+                      </span>
+                    )}
+                    {imovel.avaliacao === 'descartado' && (
+                      <span className="avaliacao-icon avaliacao-icon--descartado" title="Descartado" aria-label="Descartado">
+                        ✕
+                      </span>
+                    )}
+                    {imovel.descricao}
+                  </div>
                   <div className="property-table__meta">{imovel.imobiliaria}</div>
                 </td>
                 <td>
@@ -59,13 +71,13 @@ export default function PropertyTable({ imoveis }) {
                 <td className="property-table__price">{formatAluguel(imovel)}</td>
                 <td>{precoM2 != null ? formatCurrency(precoM2) : '—'}</td>
                 <td>
-                  <span className={`prox-badge prox-badge--${imovel.proximidade}`}>
+                  <span className={`dist-badge${highlight ? ' dist-badge--near' : ''}`}>
                     {formatDistancia(imovel)}
                   </span>
                 </td>
                 <td>
-                  <span className={`liked-badge${imovel.liked ? ' liked-badge--yes' : ''}`}>
-                    {formatGostei(imovel)}
+                  <span className={`avaliacao-badge${imovel.avaliacao ? ` avaliacao-badge--${imovel.avaliacao}` : ''}`}>
+                    {formatAvaliacao(imovel)}
                   </span>
                 </td>
                 <td>

@@ -4,22 +4,34 @@ import {
   formatArea,
   formatCurrency,
   formatDistancia,
-  formatGostei,
+  formatAvaliacao,
   getPrecoM2,
   getVerifyLabel,
-  isMuitoProximo,
+  isNearLoad,
   STATUS_LABEL,
 } from '../utils/imoveis.js'
 
 export default function PropertyCard({ imovel }) {
   const precoM2 = getPrecoM2(imovel)
-  const highlight = isMuitoProximo(imovel)
+  const highlight = isNearLoad(imovel)
 
   return (
     <article className={`property-card${highlight ? ' property-card--highlight' : ''}`}>
       <header className="property-card__header">
         <div>
-          <h3>{imovel.descricao}</h3>
+          <h3>
+            {imovel.avaliacao === 'gostei' && (
+              <span className="avaliacao-icon avaliacao-icon--gostei" title="Gostei" aria-label="Gostei">
+                ♥
+              </span>
+            )}
+            {imovel.avaliacao === 'descartado' && (
+              <span className="avaliacao-icon avaliacao-icon--descartado" title="Descartado" aria-label="Descartado">
+                ✕
+              </span>
+            )}
+            {imovel.descricao}
+          </h3>
           <p className="property-card__meta">{imovel.imobiliaria}</p>
         </div>
         <span className={`status-badge status-badge--${statusClass(imovel.status)}`}>
@@ -51,16 +63,16 @@ export default function PropertyCard({ imovel }) {
         <div>
           <dt>Distância da LOAD</dt>
           <dd>
-            <span className={`prox-badge prox-badge--${imovel.proximidade}`}>
+            <span className={`dist-badge${highlight ? ' dist-badge--near' : ''}`}>
               {formatDistancia(imovel)}
             </span>
           </dd>
         </div>
         <div>
-          <dt>Gostei</dt>
+          <dt>Avaliação</dt>
           <dd>
-            <span className={`liked-badge${imovel.liked ? ' liked-badge--yes' : ''}`}>
-              {formatGostei(imovel)}
+            <span className={`avaliacao-badge${imovel.avaliacao ? ` avaliacao-badge--${imovel.avaliacao}` : ''}`}>
+              {formatAvaliacao(imovel)}
             </span>
           </dd>
         </div>

@@ -35,11 +35,12 @@ export async function deleteProperty(id) {
   return handleResponse(response)
 }
 
-export async function updatePropertyLiked(id, liked) {
-  const response = await fetch(`/api/properties/${id}/liked`, {
+/** @param {number|string} id @param {'gostei'|'descartado'|null} avaliacao */
+export async function updatePropertyAvaliacao(id, avaliacao) {
+  const response = await fetch(`/api/properties/${id}/avaliacao`, {
     method: 'PATCH',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ liked }),
+    body: JSON.stringify({ avaliacao }),
   })
   return handleResponse(response)
 }

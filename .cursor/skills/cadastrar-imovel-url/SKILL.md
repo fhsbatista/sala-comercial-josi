@@ -35,34 +35,30 @@ Importe um anúncio para o painel sem inventar dados.
 
 ## Coordenadas
 
-Prioridade:
+Prioridade (**nunca pule um nível quando o anterior existir**):
 
-1. Coordenadas publicadas pelo próprio anúncio, JSON-LD, scripts ou mapa.
-2. Endereço exato geocodificado (Google Maps, OpenStreetMap/Nominatim).
+1. Coordenadas publicadas pelo próprio anúncio (JSON-LD, mapa Leaflet/Google, scripts).
+2. **Endereço exato** geocodificado (Google Maps, OpenStreetMap/Nominatim) — rua/avenida com número ou logradouro inequívoco.
 3. Endereço parcial que identifique inequivocamente o imóvel.
-4. **Somente bairro:** geocodifique o centro aproximado do bairro e **cadastre** `latitude`/`longitude`.
+4. **Somente bairro** (sem endereço exato no anúncio): geocodifique o centro aproximado do bairro e cadastre `latitude`/`longitude`.
 
 Regras:
 
+- **Se o anúncio tiver endereço exato, use a coordenada desse endereço — não use o centro do bairro.**
 - Nunca use a sede da imobiliária como coordenada do imóvel.
 - Valide latitude entre -90 e 90 e longitude entre -180 e 180.
 - Confirme que o ponto está em São José do Rio Preto e é compatível com bairro/endereço.
-- Se houver apenas o bairro, geocodifique `{bairro}, São José do Rio Preto, SP` (Nominatim ou equivalente), reutilize o resultado para imóveis do mesmo bairro e registre em `observacoes`: “Coordenadas: centro aproximado do bairro (Nominatim)”.
-- Em importação em lote, liste bairros distintos **antes** de geocodificar; calcule cada bairro uma vez e aplique a todos os imóveis correspondentes.
-- Se fontes confiáveis discordarem, prefira endereço exato; na dúvida, use o centro do bairro e documente a precisão.
-- Registre em `observacoes` a fonte e a precisão: anúncio, endereço exato geocodificado ou centro aproximado do bairro.
+- Endereço exato = contém logradouro (`Rua`, `Av.`, `Avenida`, `Rodovia`, etc.) e não é só `{bairro} - São José do Rio Preto`.
+- Compacto: com **endereço exato**, geocodifique o endereço (ou use lat/lng estruturadas do JSON-LD); use `initLeafletMap` só quando o anúncio informar apenas o bairro (mapa aproximado).
+- Em lote, deduplique consultas: geocodifique cada **endereço exato** distinto uma vez; idem para **bairros** distintos quando não houver endereço.
+- Registre em `observacoes` a fonte: `anúncio`, `endereço exato geocodificado (Nominatim)` ou `centro aproximado do bairro (Nominatim)`.
 
-## Proximidade
+## Distância da LOAD
 
-- Se houver coordenadas do imóvel e da LOAD via `GET /api/config`, calcule Haversine.
-- A classificação aproximada é obrigatória na API, mas não há faixas oficiais. Reutilize uma classificação declarada na fonte/base quando existir.
-- Se for um novo imóvel sem classificação, use esta convenção operacional e registre em `observacoes` que ela foi derivada em linha reta:
-  - até 1,5 km: `muito_proximo`
-  - acima de 1,5 até 4 km: `proximo`
-  - acima de 4 até 8 km: `intermediario`
-  - acima de 8 km: `mais_distante`
-- Com coordenadas (exatas ou centro do bairro), calcule Haversine e derive `proximidade` pela convenção acima.
-- Sem coordenadas (geocodificação falhou), estime `proximidade` pelo bairro quando inequívoco; caso contrário, peça ao usuário.
+- Com coordenadas do imóvel e da LOAD (`GET /api/config`), calcule Haversine em km.
+- Registre em `observacoes` a distância em linha reta quando relevante (ex.: `Distância em linha reta: 2,35 km da LOAD`).
+- O painel calcula e exibe a distância dinamicamente; não envie campo de proximidade na API.
+- Sem coordenadas (geocodificação falhou), documente em `observacoes` que as coordenadas não foram localizadas.
 
 ## Cadastro
 

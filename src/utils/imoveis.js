@@ -1,25 +1,7 @@
 /** @typedef {import('../data/imoveis.js').Imovel} Imovel */
 
-export const PROXIMIDADE_RANK = {
-  muito_proximo: 0,
-  proximo: 1,
-  intermediario: 2,
-  mais_distante: 3,
-}
-
-export const PROXIMIDADE_LABEL = {
-  muito_proximo: 'Muito próximo',
-  proximo: 'Próximo',
-  intermediario: 'Intermediário',
-  mais_distante: 'Mais distante',
-}
-
-export const PROXIMIDADE_EMOJI = {
-  muito_proximo: '🟢',
-  proximo: '🟡',
-  intermediario: '🟠',
-  mais_distante: '🔴',
-}
+/** Distância (km) usada para destacar imóveis muito próximos da LOAD na listagem. */
+export const NEAR_LOAD_KM = 1.5
 
 export const STATUS_LABEL = {
   verificado: 'Verificado',
@@ -28,14 +10,15 @@ export const STATUS_LABEL = {
   'possivelmente expirado': 'Possivelmente expirado',
 }
 
-export const LIKED_FILTER_OPTIONS = [
+export const AVALIACAO_FILTER_OPTIONS = [
   { value: 'todos', label: 'Todos' },
   { value: 'gostei', label: 'Gostei' },
-  { value: 'nao_gostei', label: 'Não gostei' },
+  { value: 'descartado', label: 'Descartado' },
+  { value: 'neutro', label: 'Neutro' },
 ]
 
 export const SORT_OPTIONS = [
-  { value: 'proximidade_asc', label: 'Proximidade da LOAD (mais próximo)' },
+  { value: 'distancia_asc', label: 'Distância da LOAD (mais próximo)' },
   { value: 'preco_asc', label: 'Preço (menor)' },
   { value: 'preco_desc', label: 'Preço (maior)' },
   { value: 'area_asc', label: 'Área (menor)' },
@@ -84,7 +67,7 @@ export function formatDistancia(imovel) {
   if (imovel.distanciaKm != null) {
     return `${imovel.distanciaKm.toLocaleString('pt-BR', { minimumFractionDigits: 1, maximumFractionDigits: 1 })} km`
   }
-  return `${PROXIMIDADE_EMOJI[imovel.proximidade]} ${PROXIMIDADE_LABEL[imovel.proximidade]}`
+  return '—'
 }
 
 /** @param {Imovel[]} lista */
@@ -108,7 +91,8 @@ export function filterImoveis(lista, filtros) {
     areaMin = '',
     areaMax = '',
     status = '',
-    gostei = 'todos',
+    avaliacao = 'todos',
+    distanciaMax = '',
   } = filtros
 
   const buscaNorm = normalizeText(busca.trim())
@@ -124,13 +108,19 @@ export function filterImoveis(lista, filtros) {
     if (imobiliaria && imovel.imobiliaria !== imobiliaria) return false
     if (bairro && imovel.bairro !== bairro) return false
     if (status && imovel.status !== status) return false
-    if (gostei === 'gostei' && !imovel.liked) return false
-    if (gostei === 'nao_gostei' && imovel.liked) return false
+    if (avaliacao === 'gostei' && imovel.avaliacao !== 'gostei') return false
+    if (avaliacao === 'descartado' && imovel.avaliacao !== 'descartado') return false
+    if (avaliacao === 'neutro' && imovel.avaliacao != null) return false
 
     if (aluguelMin !== '' && imovel.aluguel < Number(aluguelMin)) return false
     if (aluguelMax !== '' && imovel.aluguel > Number(aluguelMax)) return false
     if (areaMin !== '' && imovel.areaM2 < Number(areaMin)) return false
     if (areaMax !== '' && imovel.areaM2 > Number(areaMax)) return false
+
+    if (distanciaMax !== '') {
+      const maxKm = Number(distanciaMax)
+      if (imovel.distanciaKm == null || imovel.distanciaKm > maxKm) return false
+    }
 
     return true
   })
@@ -145,13 +135,12 @@ export function sortImoveis(lista, sortBy) {
 
   sorted.sort((a, b) => {
     switch (sortBy) {
-      case 'proximidade_asc': {
-        const distA = a.distanciaKm != null
-          ? a.distanciaKm
-          : 1000 + PROXIMIDADE_RANK[a.proximidade]
-        const distB = b.distanciaKm != null
-          ? b.distanciaKm
-          : 1000 + PROXIMIDADE_RANK[b.proximidade]
+      case 'distancia_asc': {
+        const distA = a.distanciaKm
+        const distB = b.distanciaKm
+        if (distA == null && distB == null) return a.id - b.id
+        if (distA == null) return 1
+        if (distB == null) return -1
         if (distA !== distB) return distA - distB
         return a.id - b.id
       }
@@ -203,14 +192,16 @@ export function computeIntegrityStats(lista) {
 /** @param {Imovel[]} lista */
 export function computeSummaryStats(lista) {
   if (lista.length === 0) {
-    return { total: 0, menorAluguel: null, maiorArea: null, muitoProximos: 0 }
+    return { total: 0, menorAluguel: null, maiorArea: null, proximosLoad: 0 }
   }
 
   return {
     total: lista.length,
     menorAluguel: Math.min(...lista.map((i) => i.aluguel)),
     maiorArea: Math.max(...lista.map((i) => i.areaM2)),
-    muitoProximos: lista.filter((i) => i.proximidade === 'muito_proximo').length,
+    proximosLoad: lista.filter(
+      (i) => i.distanciaKm != null && i.distanciaKm <= NEAR_LOAD_KM,
+    ).length,
   }
 }
 
@@ -219,14 +210,16 @@ export function getVerifyLabel(imovel) {
   return imovel.tipoUrl === 'busca' ? 'Abrir busca da imobiliária' : 'Verificar anúncio'
 }
 
-/** @param {Imovel} imovel */
-export function isMuitoProximo(imovel) {
-  return imovel.proximidade === 'muito_proximo'
+/** @param {Imovel} imovel @param {number} [maxKm] */
+export function isNearLoad(imovel, maxKm = NEAR_LOAD_KM) {
+  return imovel.distanciaKm != null && imovel.distanciaKm <= maxKm
 }
 
 /** @param {Imovel} imovel */
-export function formatGostei(imovel) {
-  return imovel.liked ? '♥ Gostei' : '—'
+export function formatAvaliacao(imovel) {
+  if (imovel.avaliacao === 'gostei') return '♥'
+  if (imovel.avaliacao === 'descartado') return '✕'
+  return '—'
 }
 
 export const DEFAULT_FILTERS = {
@@ -238,5 +231,6 @@ export const DEFAULT_FILTERS = {
   areaMin: '',
   areaMax: '',
   status: '',
-  gostei: 'todos',
+  avaliacao: 'todos',
+  distanciaMax: '',
 }

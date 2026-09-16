@@ -1,40 +1,40 @@
 #!/usr/bin/env node
 /**
- * Geocodifica bairros distintos (Nominatim) e preenche latitude/longitude no SQLite.
- * Uso: node .../backfill-bairro-coords.mjs [--imobiliaria Tess] [--dry-run]
+ * Re-geocodifica imóveis com endereço exato que receberam coordenadas do centro do bairro.
+ * Uso: node .../backfill-exact-address-coords.mjs [--imobiliaria Tess] [--dry-run]
  */
 
 import { writeFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 import Database from 'better-sqlite3'
 import {
+  classifyProximidade,
+  geocodeQuery,
   haversineKm,
   isExactAddress,
   LOAD_DEFAULT,
   upsertCoordObservacao,
-  geocodeQuery,
 } from './geocode-utils.mjs'
 
 const API_BASE = process.env.API_BASE ?? 'http://localhost:3001'
 const DB_PATH = resolve(process.env.DATABASE_PATH ?? 'data/imoveis.sqlite')
-const COORD_NOTE = 'Coordenadas: centro aproximado do bairro (Nominatim)'
 
 const args = process.argv.slice(2)
 const imobFilter = args.includes('--imobiliaria')
   ? args[args.indexOf('--imobiliaria') + 1]
-  : 'Tess'
+  : null
 const dryRun = args.includes('--dry-run')
+
+const geocodeCache = new Map()
 
 function sleep(ms) {
   return new Promise((r) => setTimeout(r, ms))
 }
 
-const geocodeCache = new Map()
-
-async function geocodeBairro(bairro) {
-  const q = `${bairro}, São José do Rio Preto, SP, Brasil`
-  const point = await geocodeQuery(q, geocodeCache, { sleep })
-  return point ? { ...point, displayName: q } : null
+function needsExactAddressFix(p) {
+  if (!isExactAddress(p.endereco)) return false
+  const obs = p.observacoes ?? ''
+  return /centro aproximado do bairro/i.test(obs) || p.latitude == null || p.longitude == null
 }
 
 async function main() {
@@ -43,49 +43,46 @@ async function main() {
 
   const targets = properties.filter(
     (p) =>
-      p.imobiliaria === imobFilter &&
       p.tipoUrl === 'individual' &&
-      (p.latitude == null || p.longitude == null) &&
-      !isExactAddress(p.endereco),
+      (!imobFilter || p.imobiliaria === imobFilter) &&
+      needsExactAddressFix(p),
   )
 
-  const bairros = [...new Set(targets.map((p) => p.bairro))].sort((a, b) =>
-    a.localeCompare(b, 'pt-BR'),
-  )
+  console.log(`Imóveis com endereço exato a corrigir: ${targets.length}`)
+  if (!targets.length) return
 
-  console.log(`Imóveis alvo: ${targets.length}`)
-  console.log(`Bairros distintos: ${bairros.length}`)
-  for (const b of bairros) {
-    const n = targets.filter((p) => p.bairro === b).length
-    console.log(`  - ${b} (${n})`)
-  }
-
-  const bairroCoords = {}
+  const addressCoords = {}
   const failures = []
 
-  for (const bairro of bairros) {
-    process.stdout.write(`Geocodificando: ${bairro} ... `)
+  for (const p of targets) {
+    const addr = p.endereco
+    if (addressCoords[addr] !== undefined) continue
+
+    process.stdout.write(`Geocodificando endereço: ${addr} ... `)
     try {
-      const hit = await geocodeBairro(bairro)
+      const q = `${addr}, São José do Rio Preto, SP, Brasil`
+      const hit = await geocodeQuery(q, geocodeCache, { sleep })
       if (!hit) {
         console.log('FALHOU')
-        failures.push(bairro)
+        failures.push(addr)
+        addressCoords[addr] = null
         continue
       }
-      bairroCoords[bairro] = hit
+      addressCoords[addr] = hit
       console.log(`${hit.lat}, ${hit.lng}`)
     } catch (err) {
       console.log(`ERRO: ${err.message}`)
-      failures.push(bairro)
+      failures.push(addr)
+      addressCoords[addr] = null
     }
   }
 
   if (dryRun) {
     writeFileSync(
-      resolve('bairro-coords-preview.json'),
-      JSON.stringify({ bairroCoords, failures }, null, 2),
+      resolve('exact-address-coords-preview.json'),
+      JSON.stringify({ addressCoords, failures, targets: targets.map((p) => p.id) }, null, 2),
     )
-    console.log('\nDry-run: nada gravado. Preview em bairro-coords-preview.json')
+    console.log('\nDry-run: nada gravado. Preview em exact-address-coords-preview.json')
     return
   }
 
@@ -94,6 +91,7 @@ async function main() {
     UPDATE properties
     SET latitude = @latitude,
         longitude = @longitude,
+        proximidade = @proximidade,
         observacoes = @observacoes,
         updated_at = datetime('now')
     WHERE id = @id
@@ -104,21 +102,23 @@ async function main() {
 
   const tx = db.transaction((rows) => {
     for (const p of rows) {
-      const hit = bairroCoords[p.bairro]
+      const hit = addressCoords[p.endereco]
       if (!hit) {
         skipped++
         continue
       }
-      const km = haversineKm(LOAD_DEFAULT, { lat: hit.lat, lng: hit.lng })
+      const km = haversineKm(LOAD_DEFAULT, hit)
+      const prox = classifyProximidade(km)
       const obs = upsertCoordObservacao(
         p.observacoes,
-        `${COORD_NOTE}. Distância em linha reta: ${km.toFixed(2)} km da LOAD`,
-        null,
+        'Coordenadas: endereço exato geocodificado (Nominatim)',
+        `Proximidade derivada em linha reta (${km.toFixed(2)} km da LOAD)`,
       )
       update.run({
         id: p.id,
         latitude: hit.lat,
         longitude: hit.lng,
+        proximidade: prox,
         observacoes: obs,
       })
       updated++
@@ -131,8 +131,8 @@ async function main() {
   console.log('\n--- Resultado ---')
   console.log(`Atualizados: ${updated}`)
   console.log(`Sem geocode: ${skipped}`)
-  console.log(`Bairros sem resultado: ${failures.length}`)
-  if (failures.length) console.log(failures.join(', '))
+  console.log(`Endereços sem resultado: ${failures.length}`)
+  if (failures.length) console.log(failures.join('\n'))
 }
 
 main().catch((err) => {

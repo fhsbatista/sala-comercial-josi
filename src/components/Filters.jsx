@@ -1,4 +1,4 @@
-import { LIKED_FILTER_OPTIONS, SORT_OPTIONS } from '../utils/imoveis.js'
+import { AVALIACAO_FILTER_OPTIONS, SORT_OPTIONS } from '../utils/imoveis.js'
 
 export default function Filters({
   filtros,
@@ -11,6 +11,7 @@ export default function Filters({
   statusOptions,
   resultCount,
   totalCount,
+  loadConfigured = true,
 }) {
   function handleChange(field, value) {
     onChange({ ...filtros, [field]: value })
@@ -27,17 +28,19 @@ export default function Filters({
 
       <div className="filters__grid">
         <div className="field field--segmented field--wide">
-          <span>Gostei</span>
-          <div className="segmented-control" role="group" aria-label="Filtrar por gostei">
-            {LIKED_FILTER_OPTIONS.map((option) => (
+          <span>Avaliação</span>
+          <div className="segmented-control" role="group" aria-label="Filtrar por avaliação">
+            {AVALIACAO_FILTER_OPTIONS.map((option) => (
               <button
                 key={option.value}
                 type="button"
                 className={`segmented-control__option${
-                  filtros.gostei === option.value ? ' segmented-control__option--active' : ''
+                  filtros.avaliacao === option.value ? ' segmented-control__option--active' : ''
+                }${option.value === 'gostei' ? ' segmented-control__option--gostei' : ''}${
+                  option.value === 'descartado' ? ' segmented-control__option--descartado' : ''
                 }`}
-                aria-pressed={filtros.gostei === option.value}
-                onClick={() => handleChange('gostei', option.value)}
+                aria-pressed={filtros.avaliacao === option.value}
+                onClick={() => handleChange('avaliacao', option.value)}
               >
                 {option.label}
               </button>
@@ -135,6 +138,24 @@ export default function Filters({
             placeholder="Ex: 300"
             value={filtros.areaMax}
             onChange={(e) => handleChange('areaMax', e.target.value)}
+          />
+        </label>
+
+        <label className="field">
+          <span>Distância máx. da LOAD (km)</span>
+          <input
+            type="number"
+            min="0"
+            step="0.1"
+            placeholder="Ex: 5"
+            value={filtros.distanciaMax}
+            disabled={!loadConfigured}
+            title={
+              loadConfigured
+                ? 'Filtra imóveis com coordenadas dentro do raio informado'
+                : 'Configure LOAD_LATITUDE e LOAD_LONGITUDE para usar este filtro'
+            }
+            onChange={(e) => handleChange('distanciaMax', e.target.value)}
           />
         </label>
 

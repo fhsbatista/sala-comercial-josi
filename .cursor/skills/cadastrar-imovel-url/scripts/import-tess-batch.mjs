@@ -6,36 +6,17 @@
 
 import { readFileSync, writeFileSync } from 'node:fs'
 import { resolve } from 'node:path'
+import { isExactAddress, resolveCoordinates } from './geocode-utils.mjs'
 
 const API_BASE = process.env.API_BASE ?? 'http://localhost:3001'
 const INPUT = resolve(process.argv[2] ?? 'tess.txt')
 const TODAY = '16/09/2026'
-const LOAD = { lat: -20.826422092367583, lng: -49.39255542572019 }
 const UA = 'Mozilla/5.0 (compatible; sala-comercial-josi/1.0)'
 
 const geocodeCache = new Map()
 
 function sleep(ms) {
   return new Promise((r) => setTimeout(r, ms))
-}
-
-function haversineKm(a, b) {
-  const toRad = (d) => (d * Math.PI) / 180
-  const dLat = toRad(b.lat - a.lat)
-  const dLng = toRad(b.lng - a.lng)
-  const lat1 = toRad(a.lat)
-  const lat2 = toRad(b.lat)
-  const x =
-    Math.sin(dLat / 2) ** 2 +
-    Math.cos(lat1) * Math.cos(lat2) * Math.sin(dLng / 2) ** 2
-  return 6371 * 2 * Math.atan2(Math.sqrt(x), Math.sqrt(1 - x))
-}
-
-function classifyProximidade(km) {
-  if (km <= 1.5) return 'muito_proximo'
-  if (km <= 4) return 'proximo'
-  if (km <= 8) return 'intermediario'
-  return 'mais_distante'
 }
 
 function parseUrlsFromFile(path) {
@@ -88,7 +69,7 @@ function parsePropertyHtml(html, url) {
   const locationRaw = html.match(/fa-map-marker"><\/i>([^<]+)/i)?.[1]?.trim() ?? ''
   const [bairroPart, cidadePart] = locationRaw.split(/\s*-\s*/)
   const bairro = (bairroPart ?? 'Não informado').trim()
-  const endereco = locationRaw || bairro
+  let endereco = locationRaw || bairro
 
   const aluguelText =
     html.match(/<h3>\s*<span>(R\$[^<]+)<\/span>\s*<\/h3>/i)?.[1] ??
@@ -117,19 +98,21 @@ function parsePropertyHtml(html, url) {
   const terrenoM2 = terrenoMatch ? parseArea(terrenoMatch[1]) : null
 
   const mapQuery = decodeHtml(html.match(/maps\?q=([^&"]+)/i)?.[1] ?? '')
-  const hasStreetAddress = /\b(Rua|Av\.|Avenida|Rodovia|Alameda|Travessa)\b/i.test(mapQuery)
+  if (isExactAddress(mapQuery)) {
+    endereco = mapQuery.includes('São José') ? mapQuery : `${mapQuery}, São José do Rio Preto`
+  }
 
   let latitude = null
   let longitude = null
-  let coordSource = 'não localizadas; anúncio informa apenas o bairro'
+  let coordNote = null
 
-  if (hasStreetAddress) {
+  if (isExactAddress(endereco)) {
     const coords = [...html.matchAll(/(-?\d{2}\.\d{5,})/g)].map((m) => m[1])
     const uniq = [...new Set(coords)]
     if (uniq.length >= 2) {
       latitude = Number(uniq[0])
       longitude = Number(uniq[1])
-      coordSource = 'coordenadas do mapa/anúncio (endereço declarado)'
+      coordNote = 'Coordenadas: anúncio (mapa com endereço exato)'
     }
   }
 
@@ -146,7 +129,6 @@ function parsePropertyHtml(html, url) {
   if (terrenoM2 && terrenoM2 !== areaM2) {
     observacoesParts.push(`Terreno: ${terrenoM2} m²`)
   }
-  observacoesParts.push(`Coordenadas: ${coordSource}`)
   if (cidadePart) observacoesParts.push(`Cidade: ${cidadePart.trim()}`)
 
   return {
@@ -161,53 +143,9 @@ function parsePropertyHtml(html, url) {
     longitude,
     descricao,
     observacoes: observacoesParts.join('. '),
-    mapQuery,
+    coordNote,
     url: normalizeUrl(url),
   }
-}
-
-async function geocodeBairro(bairro) {
-  const key = bairro.toLowerCase()
-  if (geocodeCache.has(key)) return geocodeCache.get(key)
-
-  const q = `${bairro}, São José do Rio Preto, SP, Brasil`
-  const url = `https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${encodeURIComponent(q)}`
-  await sleep(1100)
-  const res = await fetch(url, { headers: { 'User-Agent': UA } })
-  if (!res.ok) {
-    geocodeCache.set(key, null)
-    return null
-  }
-  const data = await res.json()
-  const hit = data[0]
-  const result = hit
-    ? { lat: Number(hit.lat), lng: Number(hit.lon) }
-    : null
-  geocodeCache.set(key, result)
-  return result
-}
-
-async function resolveProximidade(parsed) {
-  if (parsed.latitude != null && parsed.longitude != null) {
-    const km = haversineKm(LOAD, { lat: parsed.latitude, lng: parsed.longitude })
-    const prox = classifyProximidade(km)
-    parsed.observacoes += `. Proximidade derivada em linha reta (${km.toFixed(2)} km da LOAD)`
-    return prox
-  }
-
-  const point = await geocodeBairro(parsed.bairro)
-  if (point) {
-    parsed.latitude = point.lat
-    parsed.longitude = point.lng
-    parsed.observacoes += '. Coordenadas: centro aproximado do bairro (Nominatim)'
-    const km = haversineKm(LOAD, point)
-    const prox = classifyProximidade(km)
-    parsed.observacoes += `. Proximidade derivada em linha reta (${km.toFixed(2)} km da LOAD)`
-    return prox
-  }
-
-  parsed.observacoes += '. Proximidade: intermediario (bairro não geocodificado)'
-  return 'intermediario'
 }
 
 async function fetchHtml(url) {
@@ -282,7 +220,7 @@ async function main() {
       if (!parsed.aluguel) throw new Error('aluguel não encontrado')
       if (!parsed.areaM2) throw new Error('área não encontrada')
 
-      const proximidade = await resolveProximidade(parsed)
+      const resolved = await resolveCoordinates(parsed, { cache: geocodeCache, sleep })
 
       const payload = {
         imobiliaria: 'Tess',
@@ -292,14 +230,14 @@ async function main() {
         areaM2: parsed.areaM2,
         aluguel: parsed.aluguel,
         encargos: parsed.encargos,
-        proximidade,
+        proximidade: resolved.proximidade,
         url: parsed.url,
         tipoUrl: 'individual',
         status: 'verificado',
         ultimaVerificacao: TODAY,
-        observacoes: parsed.observacoes,
-        latitude: parsed.latitude,
-        longitude: parsed.longitude,
+        observacoes: resolved.observacoes,
+        latitude: resolved.latitude,
+        longitude: resolved.longitude,
       }
 
       const created = await postProperty(payload)

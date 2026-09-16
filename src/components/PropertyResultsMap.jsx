@@ -6,6 +6,7 @@ import 'leaflet/dist/leaflet.css'
 import {
   createPinIcon,
   createPinIconWithLabel,
+  getPropertyPinColor,
   MAP_MARKER_COLORS,
   MAP_MARKER_LABELS,
   truncateLabel,
@@ -42,9 +43,21 @@ function FitResultsBounds({ loadCoordinates, imoveis }) {
   return null
 }
 
+function avaliacaoPrefix(avaliacao) {
+  if (avaliacao === 'gostei') return '♥ '
+  if (avaliacao === 'descartado') return '✕ '
+  return ''
+}
+
+function avaliacaoAltPrefix(avaliacao) {
+  if (avaliacao === 'gostei') return 'Gostei: '
+  if (avaliacao === 'descartado') return 'Descartado: '
+  return ''
+}
+
 function PropertyMarker({ imovel }) {
   const markerRef = useRef(null)
-  const color = imovel.liked ? MAP_MARKER_COLORS.liked : MAP_MARKER_COLORS.property
+  const color = getPropertyPinColor(imovel.avaliacao)
   const tooltipText = truncateLabel(imovel.descricao, 40)
 
   useEffect(() => {
@@ -67,17 +80,22 @@ function PropertyMarker({ imovel }) {
     <Marker
       ref={markerRef}
       position={[imovel.coordenadas.lat, imovel.coordenadas.lng]}
-      icon={createPinIcon(color, { liked: imovel.liked })}
-      alt={`${imovel.liked ? 'Gostei: ' : ''}${imovel.descricao}`}
+      icon={createPinIcon(color, { avaliacao: imovel.avaliacao })}
+      alt={`${avaliacaoAltPrefix(imovel.avaliacao)}${imovel.descricao}`}
       title={imovel.descricao}
     >
       <Tooltip direction="top" offset={[0, -36]} opacity={0.95}>
-        {imovel.liked ? `♥ ${tooltipText}` : tooltipText}
+        {`${avaliacaoPrefix(imovel.avaliacao)}${tooltipText}`}
       </Tooltip>
       <Popup className="results-map-popup" minWidth={220} maxWidth={300}>
         <div className="results-map-popup__content">
           <strong className="results-map-popup__title">
-            {imovel.liked && <span className="results-map-popup__heart" aria-hidden="true">♥ </span>}
+            {imovel.avaliacao === 'gostei' && (
+              <span className="results-map-popup__avaliacao results-map-popup__avaliacao--gostei" aria-hidden="true">♥ </span>
+            )}
+            {imovel.avaliacao === 'descartado' && (
+              <span className="results-map-popup__avaliacao results-map-popup__avaliacao--descartado" aria-hidden="true">✕ </span>
+            )}
             {imovel.descricao}
           </strong>
           <dl className="results-map-popup__details">
@@ -232,6 +250,10 @@ export default function PropertyResultsMap({ imoveis, loadCoordinates, onBackToL
         <span className="results-map__legend-item results-map__legend-item--liked">
           <span className="results-map__legend-dot" aria-hidden="true" />
           ♥ Gostei
+        </span>
+        <span className="results-map__legend-item results-map__legend-item--discarded">
+          <span className="results-map__legend-dot" aria-hidden="true" />
+          ✕ Descartado
         </span>
         {missingCount > 0 && (
           <span className="results-map__legend-item results-map__legend-item--missing">

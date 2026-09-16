@@ -1,12 +1,11 @@
 import assert from 'node:assert/strict'
 import { imoveis } from '../src/data/imoveis.js'
 
-const PROXIMIDADES = ['muito_proximo', 'proximo', 'intermediario', 'mais_distante']
 const TIPOS_URL = ['individual', 'busca']
 const STATUS_VALIDOS = ['verificado', 'não verificado', 'link de busca', 'possivelmente expirado']
 const CAMPOS_OBRIGATORIOS = [
   'id', 'imobiliaria', 'descricao', 'bairro', 'endereco',
-  'areaM2', 'aluguel', 'proximidade', 'url', 'tipoUrl', 'status',
+  'areaM2', 'aluguel', 'url', 'tipoUrl', 'status',
 ]
 
 assert.equal(imoveis.length, 28, 'A base deve conter exatamente 28 imóveis')
@@ -35,7 +34,6 @@ for (const imovel of imoveis) {
 
   assert.ok(imovel.areaM2 > 0, `Imóvel ${imovel.id}: área deve ser maior que zero`)
   assert.ok(imovel.aluguel > 0, `Imóvel ${imovel.id}: aluguel deve ser positivo`)
-  assert.ok(PROXIMIDADES.includes(imovel.proximidade), `Imóvel ${imovel.id}: proximidade inválida`)
   assert.ok(TIPOS_URL.includes(imovel.tipoUrl), `Imóvel ${imovel.id}: tipoUrl inválido`)
   assert.ok(STATUS_VALIDOS.includes(imovel.status), `Imóvel ${imovel.id}: status inválido`)
   assert.ok(imovel.url.startsWith('http'), `Imóvel ${imovel.id}: URL inválida`)

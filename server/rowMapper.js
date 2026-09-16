@@ -13,7 +13,6 @@ export function rowToProperty(row) {
     areaM2: row.area_m2,
     aluguel: row.aluguel,
     encargos: row.encargos,
-    proximidade: row.proximidade,
     latitude: row.latitude,
     longitude: row.longitude,
     coordenadas: hasCoords ? { lat: row.latitude, lng: row.longitude } : null,
@@ -22,7 +21,7 @@ export function rowToProperty(row) {
     status: row.status,
     ultimaVerificacao: row.ultima_verificacao,
     observacoes: row.observacoes,
-    liked: Boolean(row.liked),
+    avaliacao: row.avaliacao ?? null,
     createdAt: row.created_at,
     updatedAt: row.updated_at,
   }
@@ -38,7 +37,6 @@ export function propertyToRow(property) {
     area_m2: property.areaM2,
     aluguel: property.aluguel,
     encargos: property.encargos ?? null,
-    proximidade: property.proximidade,
     latitude: property.latitude ?? null,
     longitude: property.longitude ?? null,
     url: property.url,
@@ -46,6 +44,6 @@ export function propertyToRow(property) {
     status: property.status,
     ultima_verificacao: property.ultimaVerificacao ?? null,
     observacoes: property.observacoes ?? null,
-    liked: property.liked ? 1 : 0,
+    avaliacao: property.avaliacao ?? null,
   }
 }

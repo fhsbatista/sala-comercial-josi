@@ -4,7 +4,7 @@ import {
   deleteProperty,
   fetchAppConfig,
   fetchProperty,
-  updatePropertyLiked,
+  updatePropertyAvaliacao,
 } from '../api/properties.js'
 import PropertyMap from '../components/PropertyMap.jsx'
 import { formatDistanceKm, haversineKm } from '../utils/geo.js'
@@ -15,7 +15,6 @@ import {
   formatDistancia,
   getPrecoM2,
   getVerifyLabel,
-  PROXIMIDADE_LABEL,
   STATUS_LABEL,
 } from '../utils/imoveis.js'
 
@@ -27,7 +26,7 @@ export default function PropertyDetailsPage() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [deleting, setDeleting] = useState(false)
-  const [updatingLiked, setUpdatingLiked] = useState(false)
+  const [updatingAvaliacao, setUpdatingAvaliacao] = useState(false)
 
   const loadData = useCallback(async () => {
     setLoading(true)
@@ -69,19 +68,25 @@ export default function PropertyDetailsPage() {
     }
   }
 
-  async function handleLiked() {
+  async function handleAvaliacao(nextAvaliacao) {
     if (!property) return
 
-    setUpdatingLiked(true)
+    setUpdatingAvaliacao(true)
     setError(null)
     try {
-      const updated = await updatePropertyLiked(property.id, !property.liked)
+      const updated = await updatePropertyAvaliacao(property.id, nextAvaliacao)
       setProperty(updated)
     } catch (err) {
-      setError(err.message || 'Erro ao atualizar gostei')
+      setError(err.message || 'Erro ao atualizar avaliação')
     } finally {
-      setUpdatingLiked(false)
+      setUpdatingAvaliacao(false)
     }
+  }
+
+  function toggleAvaliacao(target) {
+    if (!property) return
+    const next = property.avaliacao === target ? null : target
+    handleAvaliacao(next)
   }
 
   const distanceKm = useMemo(() => {
@@ -113,19 +118,42 @@ export default function PropertyDetailsPage() {
         <div className="details-page__header">
           <div>
             <Link to="/" className="details-page__back">← Voltar para imóveis</Link>
-            <h1>{property.descricao}</h1>
+            <h1>
+              {property.avaliacao === 'gostei' && (
+                <span className="avaliacao-icon avaliacao-icon--gostei" title="Gostei" aria-label="Gostei">
+                  ♥
+                </span>
+              )}
+              {property.avaliacao === 'descartado' && (
+                <span className="avaliacao-icon avaliacao-icon--descartado" title="Descartado" aria-label="Descartado">
+                  ✕
+                </span>
+              )}
+              {property.descricao}
+            </h1>
             <p className="details-page__meta">{property.imobiliaria} · ID {property.id}</p>
           </div>
           <div className="details-page__actions">
-            <button
-              type="button"
-              className={`btn btn--liked${property.liked ? ' btn--liked-active' : ''}`}
-              onClick={handleLiked}
-              disabled={updatingLiked}
-              aria-pressed={property.liked}
-            >
-              {updatingLiked ? 'Salvando...' : property.liked ? '♥ Gostei' : '♡ Gostei'}
-            </button>
+            <div className="details-page__avaliacao" role="group" aria-label="Avaliar imóvel">
+              <button
+                type="button"
+                className={`btn btn--liked${property.avaliacao === 'gostei' ? ' btn--liked-active' : ''}`}
+                onClick={() => toggleAvaliacao('gostei')}
+                disabled={updatingAvaliacao}
+                aria-pressed={property.avaliacao === 'gostei'}
+              >
+                {updatingAvaliacao ? 'Salvando...' : property.avaliacao === 'gostei' ? '♥ Gostei' : '♡ Gostei'}
+              </button>
+              <button
+                type="button"
+                className={`btn btn--discarded${property.avaliacao === 'descartado' ? ' btn--discarded-active' : ''}`}
+                onClick={() => toggleAvaliacao('descartado')}
+                disabled={updatingAvaliacao}
+                aria-pressed={property.avaliacao === 'descartado'}
+              >
+                {updatingAvaliacao ? 'Salvando...' : property.avaliacao === 'descartado' ? '✕ Descartado' : '✕ Descartar'}
+              </button>
+            </div>
             <a
               href={property.url}
               target="_blank"
@@ -159,6 +187,7 @@ export default function PropertyDetailsPage() {
               loadCoordinates={appConfig.loadCoordinates}
               propertyCoordinates={property.coordenadas}
               propertyLabel={property.descricao}
+              avaliacao={property.avaliacao}
             />
           </section>
         )}
@@ -182,10 +211,9 @@ export default function PropertyDetailsPage() {
           <DetailItem label="Aluguel" value={formatAluguel(property)} highlight />
           <DetailItem label="Preço por m²" value={precoM2 != null ? formatCurrency(precoM2) : '—'} />
           <DetailItem
-            label="Distância / proximidade da LOAD"
+            label="Distância da LOAD"
             value={distanceKm != null ? formatDistanceKm(distanceKm) : formatDistancia(property)}
           />
-          <DetailItem label="Classificação aproximada" value={PROXIMIDADE_LABEL[property.proximidade]} />
           <DetailItem
             label="Coordenadas"
             value={

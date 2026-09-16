@@ -1,4 +1,3 @@
-const PROXIMIDADES = ['muito_proximo', 'proximo', 'intermediario', 'mais_distante']
 const TIPOS_URL = ['individual', 'busca']
 const STATUS_VALIDOS = ['verificado', 'não verificado', 'link de busca', 'possivelmente expirado']
 
@@ -76,13 +75,6 @@ export function validatePropertyInput(body, { isUpdate = false } = {}) {
   const areaM2 = parseNumber(body.areaM2, 'areaM2', fields, { positive: true })
   const aluguel = parseNumber(body.aluguel, 'aluguel', fields, { positive: true })
 
-  const proximidade = trimOrNull(body.proximidade)
-  if (!proximidade) {
-    fields.proximidade = 'Campo obrigatório'
-  } else if (!PROXIMIDADES.includes(proximidade)) {
-    fields.proximidade = 'Valor inválido'
-  }
-
   const tipoUrl = trimOrNull(body.tipoUrl)
   if (!tipoUrl) {
     fields.tipoUrl = 'Campo obrigatório'
@@ -125,7 +117,6 @@ export function validatePropertyInput(body, { isUpdate = false } = {}) {
       areaM2,
       aluguel,
       encargos,
-      proximidade,
       latitude: hasLat ? latitude : null,
       longitude: hasLng ? longitude : null,
       url,

@@ -18,10 +18,10 @@ const NEXT_ID = `SELECT COALESCE(MAX(id), 0) + 1 AS nextId FROM properties`
 const INSERT = `
   INSERT INTO properties (
     id, imobiliaria, descricao, bairro, endereco, area_m2, aluguel, encargos,
-    proximidade, latitude, longitude, url, tipo_url, status, ultima_verificacao, observacoes
+    latitude, longitude, url, tipo_url, status, ultima_verificacao, observacoes
   ) VALUES (
     @id, @imobiliaria, @descricao, @bairro, @endereco, @area_m2, @aluguel, @encargos,
-    @proximidade, @latitude, @longitude, @url, @tipo_url, @status, @ultima_verificacao, @observacoes
+    @latitude, @longitude, @url, @tipo_url, @status, @ultima_verificacao, @observacoes
   )
 `
 
@@ -29,8 +29,10 @@ const DELETE_BY_ID = `
   DELETE FROM properties WHERE id = ?
 `
 
-const UPDATE_LIKED = `
-  UPDATE properties SET liked = ?, updated_at = datetime('now') WHERE id = ?
+const VALID_AVALIACAO = new Set(['gostei', 'descartado'])
+
+const UPDATE_AVALIACAO = `
+  UPDATE properties SET avaliacao = ?, updated_at = datetime('now') WHERE id = ?
 `
 
 router.get('/', (_req, res) => {
@@ -74,7 +76,6 @@ router.post('/', (req, res) => {
     area_m2: row.areaM2,
     aluguel: row.aluguel,
     encargos: row.encargos,
-    proximidade: row.proximidade,
     latitude: row.latitude,
     longitude: row.longitude,
     url: row.url,
@@ -88,14 +89,19 @@ router.post('/', (req, res) => {
   res.status(201).json({ data: rowToProperty(created) })
 })
 
-router.patch('/:id/liked', (req, res) => {
+router.patch('/:id/avaliacao', (req, res) => {
   const db = getDb()
   const id = Number(req.params.id)
   if (!Number.isInteger(id) || id <= 0) {
     return res.status(400).json({ error: 'ID inválido' })
   }
-  if (typeof req.body.liked !== 'boolean') {
-    return res.status(400).json({ error: 'Dados inválidos', fields: { liked: 'Deve ser booleano' } })
+
+  const { avaliacao } = req.body
+  if (avaliacao !== null && !VALID_AVALIACAO.has(avaliacao)) {
+    return res.status(400).json({
+      error: 'Dados inválidos',
+      fields: { avaliacao: 'Deve ser null, "gostei" ou "descartado"' },
+    })
   }
 
   const existing = db.prepare(SELECT_BY_ID).get(id)
@@ -103,7 +109,7 @@ router.patch('/:id/liked', (req, res) => {
     return res.status(404).json({ error: 'Imóvel não encontrado' })
   }
 
-  db.prepare(UPDATE_LIKED).run(req.body.liked ? 1 : 0, id)
+  db.prepare(UPDATE_AVALIACAO).run(avaliacao, id)
   const updated = db.prepare(SELECT_BY_ID).get(id)
   res.json({ data: rowToProperty(updated) })
 })

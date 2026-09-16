@@ -13,6 +13,7 @@ import {
   filterImoveis,
   formatArea,
   formatCurrency,
+  NEAR_LOAD_KM,
   getUniqueValues,
   sortImoveis,
 } from '../utils/imoveis.js'
@@ -23,7 +24,7 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [filtros, setFiltros] = useState({ ...DEFAULT_FILTERS })
-  const [sortBy, setSortBy] = useState('proximidade_asc')
+  const [sortBy, setSortBy] = useState('distancia_asc')
   const [viewMode, setViewMode] = useState('lista')
 
   const loadData = useCallback(async () => {
@@ -66,7 +67,7 @@ export default function DashboardPage() {
 
   function handleClearFilters() {
     setFiltros({ ...DEFAULT_FILTERS })
-    setSortBy('proximidade_asc')
+    setSortBy('distancia_asc')
   }
 
   if (loading) {
@@ -135,7 +136,10 @@ export default function DashboardPage() {
               label="Maior área"
               value={summary.maiorArea != null ? formatArea(summary.maiorArea) : '—'}
             />
-            <SummaryCard label="Muito próximos da LOAD" value={String(summary.muitoProximos)} />
+            <SummaryCard
+              label={`Até ${NEAR_LOAD_KM.toLocaleString('pt-BR')} km da LOAD`}
+              value={String(summary.proximosLoad)}
+            />
           </div>
         </section>
 
@@ -150,6 +154,7 @@ export default function DashboardPage() {
           statusOptions={statusOptions}
           resultCount={filtered.length}
           totalCount={enriched.length}
+          loadConfigured={Boolean(appConfig?.loadCoordinates)}
         />
 
         <section className="results" aria-label="Resultados de imóveis">

@@ -7,10 +7,10 @@ import { initialProperties } from './seeds/initial-properties.js'
 const INSERT = `
   INSERT INTO properties (
     id, imobiliaria, descricao, bairro, endereco, area_m2, aluguel, encargos,
-    proximidade, latitude, longitude, url, tipo_url, status, ultima_verificacao, observacoes
+    latitude, longitude, url, tipo_url, status, ultima_verificacao, observacoes
   ) VALUES (
     @id, @imobiliaria, @descricao, @bairro, @endereco, @areaM2, @aluguel, @encargos,
-    @proximidade, @latitude, @longitude, @url, @tipoUrl, @status, @ultimaVerificacao, @observacoes
+    @latitude, @longitude, @url, @tipoUrl, @status, @ultimaVerificacao, @observacoes
   )
 `
 
@@ -33,7 +33,6 @@ export function runSeed(db = getDb()) {
       areaM2: item.areaM2,
       aluguel: item.aluguel,
       encargos: item.encargos,
-      proximidade: item.proximidade,
       latitude: item.coordenadas?.lat ?? null,
       longitude: item.coordenadas?.lng ?? null,
       url: item.url,

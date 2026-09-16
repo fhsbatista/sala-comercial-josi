@@ -36,7 +36,7 @@ function FitBounds({ loadCoordinates, propertyCoordinates }) {
   return null
 }
 
-export default function PropertyMap({ loadCoordinates, propertyCoordinates, propertyLabel }) {
+export default function PropertyMap({ loadCoordinates, propertyCoordinates, propertyLabel, avaliacao = null }) {
   const center = [
     (loadCoordinates.lat + propertyCoordinates.lat) / 2,
     (loadCoordinates.lng + propertyCoordinates.lng) / 2,
@@ -76,7 +76,7 @@ export default function PropertyMap({ loadCoordinates, propertyCoordinates, prop
         </Marker>
         <Marker
           position={[propertyCoordinates.lat, propertyCoordinates.lng]}
-          icon={createPropertyDetailPinIcon(propertyLabel)}
+          icon={createPropertyDetailPinIcon(propertyLabel, { avaliacao })}
         >
           <Popup>
             <strong>{MARKERS.property.popupTitle}</strong>

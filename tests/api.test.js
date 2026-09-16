@@ -49,7 +49,6 @@ describe('API', () => {
         endereco: 'Rua Teste, 100',
         areaM2: 50,
         aluguel: 2000,
-        proximidade: 'proximo',
         url: 'https://example.com/imovel',
         tipoUrl: 'individual',
         latitude: -20.8123,
@@ -71,7 +70,6 @@ describe('API', () => {
         endereco: 'Rua Teste, 100',
         areaM2: 50,
         aluguel: 2000,
-        proximidade: 'proximo',
         url: 'https://example.com/imovel',
         tipoUrl: 'individual',
         latitude: -20.8123,
@@ -92,7 +90,6 @@ describe('API', () => {
         endereco: 'Centro',
         areaM2: 50,
         aluguel: 2000,
-        proximidade: 'proximo',
         url: 'https://example.com/busca',
         tipoUrl: 'busca',
       })
@@ -118,35 +115,46 @@ describe('API', () => {
         endereco: 'Rua Teste, 100',
         areaM2: 20,
         aluguel: 900,
-        proximidade: 'proximo',
         url: 'https://example.com/imovel-pequeno',
         tipoUrl: 'individual',
       })
 
     assert.equal(res.status, 201)
     assert.equal(res.body.data.areaM2, 20)
-    assert.equal(res.body.data.liked, false)
+    assert.equal(res.body.data.avaliacao, null)
   })
 
-  it('PATCH /api/properties/:id/liked updates the liked flag', async () => {
-    const liked = await request(app)
-      .patch('/api/properties/1/liked')
-      .send({ liked: true })
+  it('PATCH /api/properties/:id/avaliacao updates evaluation state', async () => {
+    const gostei = await request(app)
+      .patch('/api/properties/1/avaliacao')
+      .send({ avaliacao: 'gostei' })
 
-    assert.equal(liked.status, 200)
-    assert.equal(liked.body.data.liked, true)
+    assert.equal(gostei.status, 200)
+    assert.equal(gostei.body.data.avaliacao, 'gostei')
 
     const fetched = await request(app).get('/api/properties/1')
-    assert.equal(fetched.body.data.liked, true)
+    assert.equal(fetched.body.data.avaliacao, 'gostei')
+
+    const descartado = await request(app)
+      .patch('/api/properties/1/avaliacao')
+      .send({ avaliacao: 'descartado' })
+    assert.equal(descartado.status, 200)
+    assert.equal(descartado.body.data.avaliacao, 'descartado')
+
+    const neutro = await request(app)
+      .patch('/api/properties/1/avaliacao')
+      .send({ avaliacao: null })
+    assert.equal(neutro.status, 200)
+    assert.equal(neutro.body.data.avaliacao, null)
 
     const invalid = await request(app)
-      .patch('/api/properties/1/liked')
-      .send({ liked: 'yes' })
+      .patch('/api/properties/1/avaliacao')
+      .send({ avaliacao: 'yes' })
     assert.equal(invalid.status, 400)
 
     const missing = await request(app)
-      .patch('/api/properties/9999/liked')
-      .send({ liked: true })
+      .patch('/api/properties/9999/avaliacao')
+      .send({ avaliacao: 'gostei' })
     assert.equal(missing.status, 404)
   })
 
@@ -160,7 +168,6 @@ describe('API', () => {
         endereco: 'Rua Teste, 100',
         areaM2: 50,
         aluguel: 2000,
-        proximidade: 'proximo',
         url: 'https://example.com/excluir',
         tipoUrl: 'individual',
       })

@@ -210,22 +210,56 @@ body {
 }
 
 .segmented-control__option--active {
-  background: #fff1f2;
-  color: #be123c;
+  background: #eff6ff;
+  color: var(--color-primary);
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
 }
 
-.liked-badge {
+.segmented-control__option--active.segmented-control__option--gostei {
+  background: #fff1f2;
+  color: #be123c;
+}
+
+.segmented-control__option--active.segmented-control__option--descartado {
+  background: #f1f5f9;
+  color: #475569;
+}
+
+.avaliacao-icon {
+  display: inline-block;
+  margin-right: 0.35rem;
+  font-size: 0.95em;
+  line-height: 1;
+  vertical-align: middle;
+}
+
+.avaliacao-icon--gostei {
+  color: #e11d48;
+}
+
+.avaliacao-icon--descartado {
+  color: #64748b;
+}
+
+.avaliacao-badge {
   display: inline-block;
   font-size: 0.8125rem;
   color: var(--color-text-muted);
 }
 
-.liked-badge--yes {
+.avaliacao-badge--gostei {
   padding: 0.2rem 0.5rem;
   border-radius: 999px;
   background: #fff1f2;
   color: #be123c;
+  font-weight: 600;
+}
+
+.avaliacao-badge--descartado {
+  padding: 0.2rem 0.5rem;
+  border-radius: 999px;
+  background: #f1f5f9;
+  color: #475569;
   font-weight: 600;
 }
 
@@ -321,6 +355,29 @@ body {
   cursor: not-allowed;
 }
 
+.btn--discarded {
+  background: #fff;
+  color: #475569;
+  border-color: #cbd5e1;
+}
+
+.btn--discarded:hover:not(:disabled),
+.btn--discarded-active {
+  background: #f1f5f9;
+  border-color: #94a3b8;
+}
+
+.btn--discarded:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.details-page__avaliacao {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
 .btn--small { padding: 0.35rem 0.65rem; font-size: 0.8125rem; }
 
 .btn:focus-visible {
@@ -408,11 +465,19 @@ body {
 .actions { display: flex; flex-direction: column; gap: 0.35rem; }
 
 /* Proximity badges */
-.prox-badge {
+.dist-badge {
   display: inline-block;
   font-size: 0.8125rem;
   font-weight: 500;
   white-space: nowrap;
+}
+
+.dist-badge--near {
+  padding: 0.2rem 0.5rem;
+  border-radius: 999px;
+  background: #d1fae5;
+  color: #047857;
+  font-weight: 600;
 }
 
 /* Status badges */
@@ -537,6 +602,10 @@ body {
   background: #e11d48;
 }
 
+.results-map__legend-item--discarded .results-map__legend-dot {
+  background: #64748b;
+}
+
 .results-map__legend-item--missing {
   color: var(--color-text-muted);
   font-weight: 400;
@@ -571,8 +640,12 @@ body {
   font-size: 0.9375rem;
 }
 
-.results-map-popup__heart {
+.results-map-popup__avaliacao--gostei {
   color: #e11d48;
+}
+
+.results-map-popup__avaliacao--descartado {
+  color: #64748b;
 }
 
 .results-map-popup__details {
@@ -599,19 +672,6 @@ body {
 
 .map-marker-wrap--pin-only {
   position: relative;
-}
-
-.map-marker-wrap__heart {
-  position: absolute;
-  top: 4px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 1;
-  font-size: 0.625rem;
-  line-height: 1;
-  color: #fff;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
-  pointer-events: none;
 }
 
 /* Cards (mobile) */

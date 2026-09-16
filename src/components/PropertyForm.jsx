@@ -1,7 +1,6 @@
 import { useState } from 'react'
-import { PROXIMIDADE_LABEL, STATUS_LABEL } from '../utils/imoveis.js'
+import { STATUS_LABEL } from '../utils/imoveis.js'
 
-const PROXIMIDADE_OPTIONS = Object.entries(PROXIMIDADE_LABEL)
 const STATUS_OPTIONS = Object.entries(STATUS_LABEL)
 
 const EMPTY_FORM = {
@@ -12,7 +11,6 @@ const EMPTY_FORM = {
   areaM2: '',
   aluguel: '',
   encargos: '',
-  proximidade: 'proximo',
   url: '',
   tipoUrl: 'individual',
   status: '',
@@ -76,7 +74,6 @@ export default function PropertyForm({ onSubmit, submitting = false }) {
       areaM2: Number(form.areaM2),
       aluguel: Number(form.aluguel),
       encargos: form.encargos.trim() || null,
-      proximidade: form.proximidade,
       url: form.url.trim(),
       tipoUrl: form.tipoUrl,
       status: form.status || undefined,
@@ -127,14 +124,6 @@ export default function PropertyForm({ onSubmit, submitting = false }) {
 
         <FormField label="Encargos" hint="Ex: + IPTU">
           <input value={form.encargos} onChange={(e) => handleChange('encargos', e.target.value)} />
-        </FormField>
-
-        <FormField label="Proximidade aproximada da LOAD" required>
-          <select value={form.proximidade} onChange={(e) => handleChange('proximidade', e.target.value)}>
-            {PROXIMIDADE_OPTIONS.map(([value, label]) => (
-              <option key={value} value={value}>{label}</option>
-            ))}
-          </select>
         </FormField>
 
         <FormField label="URL do anúncio ou busca" error={errors.url} required className="field--wide">
