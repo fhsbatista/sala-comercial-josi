@@ -1,8 +1,8 @@
-# Painel de Salões Comerciais — São José do Rio Preto
+# Painel de Imóveis Comerciais — São José do Rio Preto
 
-Aplicação full-stack para pesquisa, cadastro e comparação de salões comerciais (a partir de 40 m²) em São José do Rio Preto – SP, com foco na proximidade da **LOAD Facility**.
+Aplicação full-stack para pesquisa, cadastro e comparação de imóveis comerciais em São José do Rio Preto – SP, com foco na proximidade da **LOAD Facility**.
 
-> **Aviso:** a base inicial é uma fotografia da pesquisa realizada em **16/09/2026**. Disponibilidade, preços e links podem ter mudado. Novos imóveis podem ser cadastrados e persistidos no SQLite.
+> **Aviso:** disponibilidade, preços e links podem ter mudado desde a última conferência. A base é atualizada por importações e cadastros pela interface.
 
 ## Stack
 
@@ -16,7 +16,6 @@ Aplicação full-stack para pesquisa, cadastro e comparação de salões comerci
 - Cadastro público de imóveis (sem autenticação nesta versão)
 - Coordenadas opcionais por imóvel
 - Página de detalhes com mapa OpenStreetMap e distância em linha reta da LOAD
-- Seed idempotente com os 28 registros originais preservados
 - API REST: `GET/POST /api/properties`, `GET /api/config`
 
 ## Requisitos
@@ -69,7 +68,7 @@ Se aparecer `EADDRINUSE` na porta 3001, o Docker (ou outro processo) ainda está
 
 | Rota | Descrição |
 |------|-----------|
-| `/` | Painel com listagem, filtros e integridade |
+| `/` | Painel com listagem, filtros e resumo da base |
 | `/imoveis/novo` | Formulário de cadastro |
 | `/imoveis/:id` | Detalhes com mapa e distância |
 

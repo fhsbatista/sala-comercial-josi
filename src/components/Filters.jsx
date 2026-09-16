@@ -84,18 +84,20 @@ export default function Filters({
           </select>
         </label>
 
-        <label className="field">
-          <span>Status</span>
-          <select
-            value={filtros.status}
-            onChange={(e) => handleChange('status', e.target.value)}
-          >
-            <option value="">Todos</option>
-            {statusOptions.map((item) => (
-              <option key={item} value={item}>{item}</option>
-            ))}
-          </select>
-        </label>
+        {statusOptions.length > 1 && (
+          <label className="field">
+            <span>Status</span>
+            <select
+              value={filtros.status}
+              onChange={(e) => handleChange('status', e.target.value)}
+            >
+              <option value="">Todos</option>
+              {statusOptions.map((item) => (
+                <option key={item} value={item}>{item}</option>
+              ))}
+            </select>
+          </label>
+        )}
 
         <label className="field">
           <span>Aluguel mínimo (R$)</span>
@@ -124,7 +126,7 @@ export default function Filters({
           <input
             type="number"
             min="0"
-            placeholder="Ex: 40"
+            placeholder="Ex: 50"
             value={filtros.areaMin}
             onChange={(e) => handleChange('areaMin', e.target.value)}
           />

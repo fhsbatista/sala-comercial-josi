@@ -8,7 +8,7 @@ export default function Layout() {
       <nav className="nav" aria-label="Navegação principal">
         <div className="nav__inner">
           <Link to="/" className="nav__brand">
-            Salões Comerciais
+            Imóveis Comerciais
           </Link>
           <div className="nav__links">
             <Link

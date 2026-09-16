@@ -238,7 +238,7 @@ export default function PropertyDetailsPage() {
 
         <div className="modal__notice">
           <strong>Aviso de auditoria:</strong> disponibilidade, preços e links podem ter mudado
-          desde a coleta inicial em {appConfig?.dataBase ?? '16/09/2026'}.
+          desde a última conferência.
         </div>
       </section>
     </main>

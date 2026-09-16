@@ -198,15 +198,17 @@ export function sortImoveis(lista, sortBy) {
 }
 
 /** @param {Imovel[]} lista */
-export function computeIntegrityStats(lista) {
-  const imobiliarias = new Set(lista.map((i) => i.imobiliaria))
+export function computeDatabaseStats(lista) {
+  /** @type {Record<string, number>} */
+  const byImobiliaria = {}
+
+  for (const imovel of lista) {
+    byImobiliaria[imovel.imobiliaria] = (byImobiliaria[imovel.imobiliaria] ?? 0) + 1
+  }
+
   return {
     total: lista.length,
-    urlsIndividuais: lista.filter((i) => i.tipoUrl === 'individual').length,
-    linksBusca: lista.filter((i) => i.tipoUrl === 'busca').length,
-    verificados: lista.filter((i) => i.status === 'verificado').length,
-    naoVerificados: lista.filter((i) => i.status !== 'verificado').length,
-    imobiliarias: imobiliarias.size,
+    byImobiliaria,
   }
 }
 

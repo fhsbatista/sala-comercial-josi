@@ -9,9 +9,7 @@ router.get('/', (_req, res) => {
 
   res.json({
     data: {
-      dataBase: META.dataBase,
       referencia: META.referencia,
-      interesseSecundario: META.interesseSecundario,
       loadCoordinates,
     },
   })

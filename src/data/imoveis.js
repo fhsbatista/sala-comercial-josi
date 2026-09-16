@@ -1,16 +1,10 @@
 /** Metadados públicos exibidos na aplicação (referência LOAD, etc.). */
 export const META = {
-  dataBase: '16/09/2026',
   referencia: {
     nome: 'LOAD Facility',
     endereco: 'Rua Antônio de Godoy, 51-91',
     bairro: 'Nova Redentora',
     cidade: 'São José do Rio Preto – SP',
-  },
-  interesseSecundario: {
-    nome: 'ACIRP',
-    descricao: 'Associação Comercial e Empresarial de São José do Rio Preto',
-    regiao: 'Rua Silva Jardim, Centro',
   },
 }
 

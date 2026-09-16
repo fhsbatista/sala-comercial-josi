@@ -5,10 +5,10 @@ import SavedFiltersBar from '../components/SavedFiltersBar.jsx'
 import PropertyTable from '../components/PropertyTable.jsx'
 import PropertyCard from '../components/PropertyCard.jsx'
 import PropertyResultsMap from '../components/PropertyResultsMap.jsx'
-import DataIntegrity from '../components/DataIntegrity.jsx'
+import DatabaseSummary from '../components/DatabaseSummary.jsx'
 import { enrichWithDistance } from '../utils/geo.js'
 import {
-  computeIntegrityStats,
+  computeDatabaseStats,
   computeSummaryStats,
   DEFAULT_FILTERS,
   filterImoveis,
@@ -158,7 +158,7 @@ export default function DashboardPage() {
   )
 
   const summary = useMemo(() => computeSummaryStats(filtered), [filtered])
-  const integrity = useMemo(() => computeIntegrityStats(enriched), [enriched])
+  const databaseStats = useMemo(() => computeDatabaseStats(enriched), [enriched])
 
   function handleClearFilters() {
     setFiltros({ ...DEFAULT_FILTERS })
@@ -214,9 +214,9 @@ export default function DashboardPage() {
       <header className="header">
         <div className="header__content">
           <p className="header__eyebrow">Painel de pesquisa · São José do Rio Preto – SP</p>
-          <h1>Salões Comerciais</h1>
+          <h1>Imóveis Comerciais</h1>
           <p className="header__subtitle">
-            Comparação de salões comerciais a partir de 40 m², com foco na proximidade da{' '}
+            Comparação de imóveis comerciais em São José do Rio Preto, com foco na proximidade da{' '}
             <strong>{appConfig?.referencia?.nome ?? 'LOAD Facility'}</strong>.
           </p>
 
@@ -227,17 +227,11 @@ export default function DashboardPage() {
               <p>{appConfig?.referencia?.endereco}</p>
               <p>{appConfig?.referencia?.bairro} · {appConfig?.referencia?.cidade}</p>
             </div>
-            <div className="ref-card">
-              <h2>Interesse secundário</h2>
-              <p><strong>{appConfig?.interesseSecundario?.nome}</strong></p>
-              <p>{appConfig?.interesseSecundario?.descricao}</p>
-              <p>{appConfig?.interesseSecundario?.regiao}</p>
-            </div>
           </div>
 
           <div className="header__notice" role="note">
-            <strong>Base iniciada em {appConfig?.dataBase}.</strong> Disponibilidade, preços e links
-            podem ter mudado. Novos imóveis podem ser cadastrados e persistidos no banco SQLite.
+            Disponibilidade, preços e links podem ter mudado desde a última conferência.
+            Novos imóveis podem ser cadastrados pela interface.
           </div>
         </div>
       </header>
@@ -352,12 +346,12 @@ export default function DashboardPage() {
           )}
         </section>
 
-        <DataIntegrity stats={integrity} />
+        <DatabaseSummary stats={databaseStats} />
       </main>
 
       <footer className="footer">
         <p>
-          Painel de salões comerciais · {enriched.length} imóveis registrados
+          Painel de imóveis comerciais · {enriched.length} imóveis registrados
         </p>
       </footer>
     </>
