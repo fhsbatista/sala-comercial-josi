@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import {
   formatAluguel,
   formatArea,
@@ -9,7 +10,7 @@ import {
   STATUS_LABEL,
 } from '../utils/imoveis.js'
 
-export default function PropertyCard({ imovel, onSelect }) {
+export default function PropertyCard({ imovel }) {
   const precoM2 = getPrecoM2(imovel)
   const highlight = isMuitoProximo(imovel)
 
@@ -57,13 +58,9 @@ export default function PropertyCard({ imovel, onSelect }) {
       </dl>
 
       <div className="property-card__actions">
-        <button
-          type="button"
-          className="btn btn--secondary"
-          onClick={() => onSelect(imovel)}
-        >
+        <Link to={`/imoveis/${imovel.id}`} className="btn btn--secondary">
           Ver detalhes
-        </button>
+        </Link>
         <a
           href={imovel.url}
           target="_blank"

@@ -137,8 +137,12 @@ export function sortImoveis(lista, sortBy) {
   sorted.sort((a, b) => {
     switch (sortBy) {
       case 'proximidade_asc': {
-        const distA = a.distanciaKm ?? PROXIMIDADE_RANK[a.proximidade]
-        const distB = b.distanciaKm ?? PROXIMIDADE_RANK[b.proximidade]
+        const distA = a.distanciaKm != null
+          ? a.distanciaKm
+          : 1000 + PROXIMIDADE_RANK[a.proximidade]
+        const distB = b.distanciaKm != null
+          ? b.distanciaKm
+          : 1000 + PROXIMIDADE_RANK[b.proximidade]
         if (distA !== distB) return distA - distB
         return a.id - b.id
       }

@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import {
   formatAluguel,
   formatArea,
@@ -9,7 +10,7 @@ import {
   STATUS_LABEL,
 } from '../utils/imoveis.js'
 
-export default function PropertyTable({ imoveis, onSelect }) {
+export default function PropertyTable({ imoveis }) {
   if (imoveis.length === 0) {
     return (
       <div className="empty-state">
@@ -67,13 +68,12 @@ export default function PropertyTable({ imoveis, onSelect }) {
                 </td>
                 <td>
                   <div className="actions">
-                    <button
-                      type="button"
+                    <Link
+                      to={`/imoveis/${imovel.id}`}
                       className="btn btn--small btn--secondary"
-                      onClick={() => onSelect(imovel)}
                     >
                       Ver detalhes
-                    </button>
+                    </Link>
                     <a
                       href={imovel.url}
                       target="_blank"

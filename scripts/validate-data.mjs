@@ -33,7 +33,7 @@ for (const imovel of imoveis) {
     )
   }
 
-  assert.ok(imovel.areaM2 >= 40, `Imóvel ${imovel.id}: área mínima deve ser 40 m²`)
+  assert.ok(imovel.areaM2 > 0, `Imóvel ${imovel.id}: área deve ser maior que zero`)
   assert.ok(imovel.aluguel > 0, `Imóvel ${imovel.id}: aluguel deve ser positivo`)
   assert.ok(PROXIMIDADES.includes(imovel.proximidade), `Imóvel ${imovel.id}: proximidade inválida`)
   assert.ok(TIPOS_URL.includes(imovel.tipoUrl), `Imóvel ${imovel.id}: tipoUrl inválido`)

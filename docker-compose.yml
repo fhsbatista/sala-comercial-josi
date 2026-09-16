@@ -1,0 +1,13 @@
+services:
+  app:
+    build: .
+    ports:
+      - "3001:3001"
+    environment:
+      PORT: 3001
+      DATABASE_PATH: /data/imoveis.sqlite
+      LOAD_LATITUDE: ${LOAD_LATITUDE:-}
+      LOAD_LONGITUDE: ${LOAD_LONGITUDE:-}
+    volumes:
+      - ./data:/data
+    restart: unless-stopped

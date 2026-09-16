@@ -1,105 +1,154 @@
 # Painel de Salões Comerciais — São José do Rio Preto
 
-Painel web para pesquisa, filtragem e comparação de salões comerciais (a partir de 40 m²) em São José do Rio Preto – SP, com foco na proximidade da **LOAD Facility** (Rua Antônio de Godoy, 51-91, Nova Redentora).
+Aplicação full-stack para pesquisa, cadastro e comparação de salões comerciais (a partir de 40 m²) em São José do Rio Preto – SP, com foco na proximidade da **LOAD Facility**.
 
-> **Aviso:** a base de dados é uma fotografia da pesquisa realizada em **16/09/2026**. Disponibilidade, preços e links podem ter mudado desde então.
+> **Aviso:** a base inicial é uma fotografia da pesquisa realizada em **16/09/2026**. Disponibilidade, preços e links podem ter mudado. Novos imóveis podem ser cadastrados e persistidos no SQLite.
 
 ## Stack
 
-- [React](https://react.dev/) 19
-- [Vite](https://vite.dev/) 7
-- Dados estáticos em `src/data/imoveis.js` (sem backend)
+- **Frontend:** React 19 + Vite + React Router + Leaflet
+- **Backend:** Node.js + Express
+- **Banco:** SQLite (`better-sqlite3`)
 
 ## Funcionalidades
 
-- Tabela (desktop) e cards (mobile) com 28 imóveis
-- Busca textual (sem diferenciar acentos)
-- Filtros por imobiliária, bairro, aluguel, área e status
-- Ordenação por proximidade da LOAD, preço, área e preço/m²
-- Modal de detalhes por imóvel
-- Botão "Verificar anúncio" (abre URL em nova aba)
-- Painel de integridade dos dados
-- Classificação aproximada de proximidade (🟢 🟡 🟠 🔴), preparada para distância real futura
+- Listagem com busca, filtros e ordenação
+- Cadastro público de imóveis (sem autenticação nesta versão)
+- Coordenadas opcionais por imóvel
+- Página de detalhes com mapa OpenStreetMap e distância em linha reta da LOAD
+- Seed idempotente com os 28 registros originais preservados
+- API REST: `GET/POST /api/properties`, `GET /api/config`
 
-## Instalação e execução local
+## Requisitos
+
+- Node.js 22+
+- npm
+
+## Instalação
 
 ```bash
+cp .env.example .env
 npm install
+npm run db:setup
+```
+
+Configure manualmente as coordenadas da LOAD Facility no `.env` (necessárias para mapa e distância):
+
+```env
+LOAD_LATITUDE=
+LOAD_LONGITUDE=
+```
+
+## Desenvolvimento
+
+**Não rode `npm run dev` e `docker compose up` ao mesmo tempo** — ambos usam a porta 3001.
+
+```bash
+docker compose down   # se o Docker estiver ativo
 npm run dev
 ```
 
-Abra [http://localhost:5173](http://localhost:5173) no navegador.
+- Frontend: http://localhost:5173
+- API: http://localhost:3001 (proxy automático via Vite)
 
-## Scripts disponíveis
+Se aparecer `EADDRINUSE` na porta 3001, o Docker (ou outro processo) ainda está ocupando a porta.
+
+## Scripts
 
 | Comando | Descrição |
 |---------|-----------|
-| `npm run dev` | Servidor de desenvolvimento |
-| `npm run build` | Valida dados + build de produção |
-| `npm run preview` | Preview do build local |
-| `npm run validate:data` | Valida integridade dos 28 registros |
+| `npm run dev` | Frontend + API em paralelo |
+| `npm run build` | Build do frontend |
+| `npm start` | Servidor de produção (serve API + dist) |
+| `npm run db:migrate` | Executa migrações |
+| `npm run db:seed` | Insere os 28 imóveis iniciais (idempotente) |
+| `npm run db:setup` | migrate + seed |
+| `npm test` | Testes automatizados |
+| `npm run validate:seed` | Valida arquivo de seed |
 | `npm run lint` | ESLint |
 
-## Estrutura de dados
+## Rotas do frontend
 
-Cada imóvel em `src/data/imoveis.js` possui:
+| Rota | Descrição |
+|------|-----------|
+| `/` | Painel com listagem, filtros e integridade |
+| `/imoveis/novo` | Formulário de cadastro |
+| `/imoveis/:id` | Detalhes com mapa e distância |
 
-| Campo | Tipo | Descrição |
-|-------|------|-----------|
-| `id` | number | Identificador único (1–28) |
-| `imobiliaria` | string | Nome da imobiliária |
-| `descricao` | string | Descrição do imóvel |
-| `bairro` | string | Bairro |
-| `endereco` | string | Endereço ou localização |
-| `areaM2` | number | Área em m² |
-| `aluguel` | number | Valor do aluguel (R$) |
-| `encargos` | string\|null | Ex: "+ IPTU" |
-| `proximidade` | string | `muito_proximo`, `proximo`, `intermediario`, `mais_distante` |
-| `distanciaKm` | number\|null | Reservado para distância real futura |
-| `coordenadas` | object\|null | Reservado para lat/lng futuro |
-| `url` | string | Link do anúncio ou busca |
-| `tipoUrl` | string | `individual` ou `busca` |
-| `status` | string | `verificado`, `não verificado`, `link de busca`, `possivelmente expirado` |
-| `ultimaVerificacao` | string\|null | Data da última verificação |
-| `observacoes` | string\|null | Notas adicionais |
+## API
 
-### Adicionar ou corrigir imóveis
+### `GET /api/properties`
+Lista todos os imóveis.
 
-1. Edite `src/data/imoveis.js`
-2. Execute `npm run validate:data` para verificar integridade
-3. Faça commit e push
+### `GET /api/properties/:id`
+Detalhes de um imóvel.
 
-A validação garante: 28 registros, IDs únicos, campos obrigatórios, área mínima de 40 m², consistência entre `tipoUrl` e `status`.
+### `POST /api/properties`
+Cadastra novo imóvel. Campos principais: `imobiliaria`, `descricao`, `bairro`, `endereco`, `areaM2`, `aluguel`, `proximidade`, `url`, `tipoUrl`, `latitude`, `longitude` (opcionais, devem ser informados juntos).
 
-## Publicação no GitHub Pages
+### `GET /api/config`
+Retorna metadados públicos e coordenadas da LOAD (se configuradas).
 
-O projeto está configurado para deploy automático via GitHub Actions.
+## Cadastro público
 
-### Pré-requisitos
+Nesta versão **não há autenticação**. Qualquer visitante com acesso ao site pode cadastrar imóveis. Endpoints de edição/exclusão não estão expostos.
 
-1. Repositório no GitHub com nome `sala-comercial-josi`
-2. Em **Settings → Pages → Build and deployment**, selecione **GitHub Actions**
+## Mapa e distância
 
-### Deploy automático
+- Mapa exibido na página de detalhes quando **imóvel e LOAD** possuem coordenadas válidas
+- Distância calculada por **Haversine** (linha reta), não rota viária
+- Sem coordenadas, a classificação aproximada (Muito próximo / Próximo / etc.) continua sendo exibida
 
-A cada push na branch `main`, o workflow `.github/workflows/deploy.yml`:
+## Docker (produção)
 
-1. Instala dependências (`npm ci`)
-2. Valida a base de dados
-3. Faz o build (`vite build`)
-4. Publica em `https://<usuario>.github.io/sala-comercial-josi/`
+```bash
+# Configure LOAD_LATITUDE e LOAD_LONGITUDE no .env ou docker-compose
+docker compose up --build
+```
 
-### Base path
+Acesse http://localhost:3001
 
-O `base` do Vite está configurado como `/sala-comercial-josi/` em `vite.config.js`. Se renomear o repositório, atualize esse valor.
+O banco fica em **`./data/imoveis.sqlite`** no projeto (montado em `/data` no container). Você pode editá-lo diretamente com DB Browser ou `sqlite3`; reinicie o container e recarregue a página após alterações manuais.
 
-## Extensibilidade futura
+Se você usava o volume Docker antigo (`imoveis_data`) e quer migrar os dados:
 
-A estrutura permite adicionar posteriormente:
+```bash
+docker compose cp app:/data/imoveis.sqlite ./data/imoveis.sqlite
+docker compose down
+docker compose up -d
+```
 
-- Distância exata em km (`distanciaKm`)
-- Coordenadas e mapa (`coordenadas`)
-- Verificação automática de anúncios
-- Histórico de preços
-- Favoritos e comparação side-by-side
-- Notas pessoais por imóvel
+## Hospedagem
+
+Esta aplicação **não funciona no GitHub Pages** (requer servidor Node.js e disco persistente).
+
+Recomendações:
+- VPS ou servidor com volume persistente
+- Docker com volume montado
+- Backup periódico do arquivo `.sqlite`
+
+Serviços com filesystem efêmero perdem o banco a cada redeploy.
+
+## Estrutura
+
+```
+server/           API Express + SQLite
+  migrations/     Schema SQL versionado
+  seeds/          Dados iniciais (28 imóveis)
+src/
+  pages/          Dashboard, cadastro, detalhes
+  components/     Tabela, cards, formulário, mapa
+  api/            Cliente HTTP
+  data/imoveis.js Fonte do seed (não usada em runtime)
+```
+
+## Manutenção da base
+
+1. Imóveis iniciais: editar `src/data/imoveis.js` e rodar `npm run db:seed`
+2. Novos imóveis: cadastrar pela interface ou `POST /api/properties`
+3. Validar seed: `npm run validate:seed`
+
+## Histórico
+
+- **v1:** painel estático (commit `fa830f4`)
+- **v2:** SQLite + cadastro + mapas (versão atual)
