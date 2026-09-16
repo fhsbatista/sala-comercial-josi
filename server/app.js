@@ -4,7 +4,6 @@ import path from 'node:path'
 import { config } from './config.js'
 import { getDb } from './db.js'
 import { runMigrations } from './migrate.js'
-import { runSeed } from './seed.js'
 import propertiesRouter from './routes/properties.js'
 import configRouter from './routes/config.js'
 
@@ -16,7 +15,6 @@ export function createApp({ setupDb = true } = {}) {
 
   if (setupDb) {
     runMigrations(getDb())
-    runSeed(getDb())
   }
 
   app.get('/api/health', (_req, res) => {

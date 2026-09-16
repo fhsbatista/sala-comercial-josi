@@ -1,17 +1,17 @@
 import { Link } from 'react-router-dom'
+import PropertyAvaliacaoActions from './PropertyAvaliacaoActions.jsx'
 import {
   formatAluguel,
   formatArea,
   formatCurrency,
   formatDistancia,
-  formatAvaliacao,
   getPrecoM2,
   getVerifyLabel,
   isNearLoad,
   STATUS_LABEL,
 } from '../utils/imoveis.js'
 
-export default function PropertyCard({ imovel }) {
+export default function PropertyCard({ imovel, onAvaliacaoChange, updatingAvaliacaoId = null }) {
   const precoM2 = getPrecoM2(imovel)
   const highlight = isNearLoad(imovel)
 
@@ -50,7 +50,7 @@ export default function PropertyCard({ imovel }) {
         </div>
         <div>
           <dt>Área</dt>
-          <dd>{formatArea(imovel.areaM2)}</dd>
+          <dd>{formatArea(imovel)}</dd>
         </div>
         <div>
           <dt>Aluguel</dt>
@@ -68,15 +68,15 @@ export default function PropertyCard({ imovel }) {
             </span>
           </dd>
         </div>
-        <div>
-          <dt>Avaliação</dt>
-          <dd>
-            <span className={`avaliacao-badge${imovel.avaliacao ? ` avaliacao-badge--${imovel.avaliacao}` : ''}`}>
-              {formatAvaliacao(imovel)}
-            </span>
-          </dd>
-        </div>
       </dl>
+
+      <div className="property-card__avaliacao">
+        <PropertyAvaliacaoActions
+          imovel={imovel}
+          onAvaliacaoChange={onAvaliacaoChange}
+          updating={updatingAvaliacaoId === imovel.id}
+        />
+      </div>
 
       <div className="property-card__actions">
         <Link to={`/imoveis/${imovel.id}`} className="btn btn--secondary">

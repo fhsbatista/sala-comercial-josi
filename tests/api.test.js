@@ -24,18 +24,14 @@ describe('API', () => {
     delete process.env.DATABASE_PATH
   })
 
-  it('GET /api/properties returns seeded list', async () => {
+  it('GET /api/properties returns empty list on fresh database', async () => {
     const res = await request(app).get('/api/properties')
     assert.equal(res.status, 200)
-    assert.equal(res.body.data.length, 28)
+    assert.deepEqual(res.body.data, [])
   })
 
   it('GET /api/properties/:id returns property or 404', async () => {
-    const ok = await request(app).get('/api/properties/1')
-    assert.equal(ok.status, 200)
-    assert.equal(ok.body.data.id, 1)
-
-    const missing = await request(app).get('/api/properties/9999')
+    const missing = await request(app).get('/api/properties/1')
     assert.equal(missing.status, 404)
   })
 
@@ -56,7 +52,7 @@ describe('API', () => {
       })
 
     assert.equal(res.status, 201)
-    assert.ok(res.body.data.id > 28)
+    assert.equal(res.body.data.id, 1)
     assert.deepEqual(res.body.data.coordenadas, { lat: -20.8123, lng: -49.3789 })
   })
 
@@ -125,30 +121,45 @@ describe('API', () => {
   })
 
   it('PATCH /api/properties/:id/avaliacao updates evaluation state', async () => {
+    const created = await request(app)
+      .post('/api/properties')
+      .send({
+        imobiliaria: 'Teste',
+        descricao: 'Salão avaliação',
+        bairro: 'Centro',
+        endereco: 'Rua Teste, 100',
+        areaM2: 50,
+        aluguel: 2000,
+        url: 'https://example.com/avaliacao',
+        tipoUrl: 'individual',
+      })
+
+    const id = created.body.data.id
+
     const gostei = await request(app)
-      .patch('/api/properties/1/avaliacao')
+      .patch(`/api/properties/${id}/avaliacao`)
       .send({ avaliacao: 'gostei' })
 
     assert.equal(gostei.status, 200)
     assert.equal(gostei.body.data.avaliacao, 'gostei')
 
-    const fetched = await request(app).get('/api/properties/1')
+    const fetched = await request(app).get(`/api/properties/${id}`)
     assert.equal(fetched.body.data.avaliacao, 'gostei')
 
     const descartado = await request(app)
-      .patch('/api/properties/1/avaliacao')
+      .patch(`/api/properties/${id}/avaliacao`)
       .send({ avaliacao: 'descartado' })
     assert.equal(descartado.status, 200)
     assert.equal(descartado.body.data.avaliacao, 'descartado')
 
     const neutro = await request(app)
-      .patch('/api/properties/1/avaliacao')
+      .patch(`/api/properties/${id}/avaliacao`)
       .send({ avaliacao: null })
     assert.equal(neutro.status, 200)
     assert.equal(neutro.body.data.avaliacao, null)
 
     const invalid = await request(app)
-      .patch('/api/properties/1/avaliacao')
+      .patch(`/api/properties/${id}/avaliacao`)
       .send({ avaliacao: 'yes' })
     assert.equal(invalid.status, 400)
 

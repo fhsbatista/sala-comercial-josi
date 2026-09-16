@@ -1,17 +1,17 @@
 import { Link } from 'react-router-dom'
+import PropertyAvaliacaoActions from './PropertyAvaliacaoActions.jsx'
 import {
   formatAluguel,
   formatArea,
   formatCurrency,
   formatDistancia,
-  formatAvaliacao,
   getPrecoM2,
   getVerifyLabel,
   isNearLoad,
   STATUS_LABEL,
 } from '../utils/imoveis.js'
 
-export default function PropertyTable({ imoveis }) {
+export default function PropertyTable({ imoveis, onAvaliacaoChange, updatingAvaliacaoId = null }) {
   if (imoveis.length === 0) {
     return (
       <div className="empty-state">
@@ -67,7 +67,7 @@ export default function PropertyTable({ imoveis }) {
                   <div>{imovel.bairro}</div>
                   <div className="property-table__meta">{imovel.endereco}</div>
                 </td>
-                <td>{formatArea(imovel.areaM2)}</td>
+                <td>{formatArea(imovel)}</td>
                 <td className="property-table__price">{formatAluguel(imovel)}</td>
                 <td>{precoM2 != null ? formatCurrency(precoM2) : '—'}</td>
                 <td>
@@ -75,10 +75,13 @@ export default function PropertyTable({ imoveis }) {
                     {formatDistancia(imovel)}
                   </span>
                 </td>
-                <td>
-                  <span className={`avaliacao-badge${imovel.avaliacao ? ` avaliacao-badge--${imovel.avaliacao}` : ''}`}>
-                    {formatAvaliacao(imovel)}
-                  </span>
+                <td className="property-table__col-avaliacao">
+                  <PropertyAvaliacaoActions
+                    imovel={imovel}
+                    onAvaliacaoChange={onAvaliacaoChange}
+                    updating={updatingAvaliacaoId === imovel.id}
+                    compact
+                  />
                 </td>
                 <td>
                   <span className={`status-badge status-badge--${statusClass(imovel.status)}`}>

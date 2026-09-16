@@ -3,8 +3,8 @@ export default function DataIntegrity({ stats }) {
     <section className="integrity" aria-label="Integridade dos dados">
       <h2>Integridade dos dados</h2>
       <p className="integrity__note">
-        Estatísticas da base completa (28 registros). &ldquo;Ainda não verificado&rdquo; inclui
-        links de busca, registros pendentes e possíveis expirados.
+        Estatísticas da base completa. &ldquo;Ainda não verificado&rdquo; inclui links de busca,
+        registros pendentes e possíveis expirados.
       </p>
       <div className="integrity__grid">
         <StatCard label="Total de imóveis" value={stats.total} />

@@ -1,6 +1,7 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
-import { fetchAppConfig, fetchProperties } from '../api/properties.js'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { fetchAppConfig, fetchProperties, updatePropertyAvaliacao } from '../api/properties.js'
 import Filters from '../components/Filters.jsx'
+import SavedFiltersBar from '../components/SavedFiltersBar.jsx'
 import PropertyTable from '../components/PropertyTable.jsx'
 import PropertyCard from '../components/PropertyCard.jsx'
 import PropertyResultsMap from '../components/PropertyResultsMap.jsx'
@@ -17,15 +18,32 @@ import {
   getUniqueValues,
   sortImoveis,
 } from '../utils/imoveis.js'
+import {
+  createPreset,
+  loadSavedFiltersState,
+  persistSavedFiltersState,
+  presetMatchesCurrent,
+} from '../utils/savedFilters.js'
 
 export default function DashboardPage() {
   const [properties, setProperties] = useState([])
   const [appConfig, setAppConfig] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
-  const [filtros, setFiltros] = useState({ ...DEFAULT_FILTERS })
-  const [sortBy, setSortBy] = useState('distancia_asc')
+  const [savedState, setSavedState] = useState(() => loadSavedFiltersState())
+  const [filtros, setFiltros] = useState(() => {
+    const stored = loadSavedFiltersState()
+    const active = stored.presets.find((p) => p.id === stored.activePresetId)
+    return active ? { ...active.filtros } : { ...stored.lastSession.filtros }
+  })
+  const [sortBy, setSortBy] = useState(() => {
+    const stored = loadSavedFiltersState()
+    const active = stored.presets.find((p) => p.id === stored.activePresetId)
+    return active ? active.sortBy : stored.lastSession.sortBy
+  })
   const [viewMode, setViewMode] = useState('lista')
+  const [updatingAvaliacaoId, setUpdatingAvaliacaoId] = useState(null)
+  const filtersHydrated = useRef(false)
 
   const loadData = useCallback(async () => {
     setLoading(true)
@@ -48,6 +66,83 @@ export default function DashboardPage() {
     loadData()
   }, [loadData])
 
+  useEffect(() => {
+    filtersHydrated.current = true
+  }, [])
+
+  useEffect(() => {
+    if (!filtersHydrated.current) return
+    setSavedState((prev) => {
+      const next = {
+        ...prev,
+        lastSession: { filtros: { ...filtros }, sortBy },
+      }
+      persistSavedFiltersState(next)
+      return next
+    })
+  }, [filtros, sortBy])
+
+  const activePreset = useMemo(
+    () => savedState.presets.find((p) => p.id === savedState.activePresetId) ?? null,
+    [savedState],
+  )
+
+  const isDirty = activePreset != null && !presetMatchesCurrent(activePreset, filtros, sortBy)
+
+  function applyPreset(presetId) {
+    const preset = savedState.presets.find((p) => p.id === presetId)
+    if (!preset) return
+    setFiltros({ ...preset.filtros })
+    setSortBy(preset.sortBy)
+    const next = { ...savedState, activePresetId: presetId }
+    setSavedState(next)
+    persistSavedFiltersState(next)
+  }
+
+  function saveCurrentPreset(name) {
+    const preset = createPreset(name, filtros, sortBy)
+    const next = {
+      ...savedState,
+      presets: [...savedState.presets, preset],
+      activePresetId: preset.id,
+    }
+    setSavedState(next)
+    persistSavedFiltersState(next)
+  }
+
+  function updateActivePreset() {
+    if (!savedState.activePresetId) return
+    const next = {
+      ...savedState,
+      presets: savedState.presets.map((p) => (
+        p.id === savedState.activePresetId
+          ? { ...p, filtros: { ...filtros }, sortBy }
+          : p
+      )),
+    }
+    setSavedState(next)
+    persistSavedFiltersState(next)
+  }
+
+  function renamePreset(presetId, name) {
+    const next = {
+      ...savedState,
+      presets: savedState.presets.map((p) => (p.id === presetId ? { ...p, name } : p)),
+    }
+    setSavedState(next)
+    persistSavedFiltersState(next)
+  }
+
+  function deletePreset(presetId) {
+    const next = {
+      ...savedState,
+      presets: savedState.presets.filter((p) => p.id !== presetId),
+      activePresetId: savedState.activePresetId === presetId ? null : savedState.activePresetId,
+    }
+    setSavedState(next)
+    persistSavedFiltersState(next)
+  }
+
   const enriched = useMemo(
     () => enrichWithDistance(properties, appConfig?.loadCoordinates ?? null),
     [properties, appConfig],
@@ -68,6 +163,29 @@ export default function DashboardPage() {
   function handleClearFilters() {
     setFiltros({ ...DEFAULT_FILTERS })
     setSortBy('distancia_asc')
+    const next = { ...savedState, activePresetId: null }
+    setSavedState(next)
+    persistSavedFiltersState(next)
+  }
+
+  function handleFiltersChange(nextFiltros) {
+    setFiltros(nextFiltros)
+  }
+
+  function handleSortChange(nextSort) {
+    setSortBy(nextSort)
+  }
+
+  async function handleAvaliacaoChange(id, avaliacao) {
+    setUpdatingAvaliacaoId(id)
+    try {
+      const updated = await updatePropertyAvaliacao(id, avaliacao)
+      setProperties((prev) => prev.map((p) => (p.id === id ? updated : p)))
+    } catch (err) {
+      setError(err.message || 'Erro ao atualizar avaliação')
+    } finally {
+      setUpdatingAvaliacaoId(null)
+    }
   }
 
   if (loading) {
@@ -134,7 +252,7 @@ export default function DashboardPage() {
             />
             <SummaryCard
               label="Maior área"
-              value={summary.maiorArea != null ? formatArea(summary.maiorArea) : '—'}
+              value={summary.maiorArea != null ? formatArea({ areaM2: summary.maiorArea }) : '—'}
             />
             <SummaryCard
               label={`Até ${NEAR_LOAD_KM.toLocaleString('pt-BR')} km da LOAD`}
@@ -143,12 +261,23 @@ export default function DashboardPage() {
           </div>
         </section>
 
+        <SavedFiltersBar
+          presets={savedState.presets}
+          activePresetId={savedState.activePresetId}
+          isDirty={isDirty}
+          onApplyPreset={applyPreset}
+          onSaveCurrent={saveCurrentPreset}
+          onUpdateActive={updateActivePreset}
+          onRenamePreset={renamePreset}
+          onDeletePreset={deletePreset}
+        />
+
         <Filters
           filtros={filtros}
-          onChange={setFiltros}
+          onChange={handleFiltersChange}
           onClear={handleClearFilters}
           sortBy={sortBy}
-          onSortChange={setSortBy}
+          onSortChange={handleSortChange}
           imobiliarias={imobiliarias}
           bairros={bairros}
           statusOptions={statusOptions}
@@ -190,7 +319,11 @@ export default function DashboardPage() {
           {viewMode === 'lista' ? (
             <>
               <div className="results__desktop">
-                <PropertyTable imoveis={filtered} />
+                <PropertyTable
+                  imoveis={filtered}
+                  onAvaliacaoChange={handleAvaliacaoChange}
+                  updatingAvaliacaoId={updatingAvaliacaoId}
+                />
               </div>
               <div className="results__mobile">
                 {filtered.length === 0 ? (
@@ -200,7 +333,12 @@ export default function DashboardPage() {
                   </div>
                 ) : (
                   filtered.map((imovel) => (
-                    <PropertyCard key={imovel.id} imovel={imovel} />
+                    <PropertyCard
+                      key={imovel.id}
+                      imovel={imovel}
+                      onAvaliacaoChange={handleAvaliacaoChange}
+                      updatingAvaliacaoId={updatingAvaliacaoId}
+                    />
                   ))
                 )}
               </div>

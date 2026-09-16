@@ -13,9 +13,7 @@
     "lint": "eslint .",
     "test": "node --test",
     "db:migrate": "node server/migrate.js",
-    "db:seed": "node server/seed.js",
-    "db:setup": "npm run db:migrate && npm run db:seed",
-    "validate:seed": "node scripts/validate-data.mjs"
+    "db:setup": "npm run db:migrate"
   },
   "dependencies": {
     "better-sqlite3": "^11.10.0",

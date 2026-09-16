@@ -1,0 +1,21 @@
+{
+  "cadastrados": [
+    {
+      "id": 915,
+      "url": "https://www.redentora.com.br/alugar/Sao-Jose-do-Rio-Preto/Comercial/Casa-Comercial/Centro/15431",
+      "codigo": "15431"
+    },
+    {
+      "id": 916,
+      "url": "https://www.redentora.com.br/alugar/Sao-Jose-do-Rio-Preto/Comercial/Sala/Centro/16514",
+      "codigo": "16514"
+    },
+    {
+      "id": 917,
+      "url": "https://www.redentora.com.br/alugar/Sao-Jose-do-Rio-Preto/Comercial/Salao/Centro-Engenheiro-Schmitt/15417",
+      "codigo": "15417"
+    }
+  ],
+  "duplicados": [],
+  "erros": []
+}

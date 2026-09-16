@@ -1,0 +1,27 @@
+{
+  "cadastrados": [
+    {
+      "id": 203,
+      "url": "https://www.imobiliariatess.com.br/imovel/aluga-salao-comercial-vila-nossa-senhora-do-bonfim-com-23400-m2-com-acessibilidade-mezanino-2-banheiros-2-vagas/13711",
+      "codigo": "13711"
+    }
+  ],
+  "duplicados": [],
+  "erros": [
+    {
+      "url": "https://www.imobiliariatess.com.br/imovel/salao-galpao-comercial-industrial-frente-para-br153-rodovia-transbrasiliana/18254",
+      "codigo": "18254",
+      "error": "área não encontrada"
+    },
+    {
+      "url": "https://www.imobiliariatess.com.br/imovel/alugo-salao-comercial-setsul-ii-com-250m-novo-face-sombra/16721",
+      "codigo": "16721",
+      "error": "aluguel não encontrado"
+    },
+    {
+      "url": "https://www.imobiliariatess.com.br/imovel/alugo-salao-comercial-setsul-ii-com-250m-novo-face-sombra/16722",
+      "codigo": "16722",
+      "error": "aluguel não encontrado"
+    }
+  ]
+}

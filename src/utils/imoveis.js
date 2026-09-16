@@ -47,13 +47,34 @@ export function formatCurrency(value) {
   return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
 }
 
-/** @param {number|null|undefined} value */
-export function formatArea(value) {
-  if (value == null) return '—'
-  const formatted = Number.isInteger(value)
-    ? value.toLocaleString('pt-BR')
-    : value.toLocaleString('pt-BR', { minimumFractionDigits: 1, maximumFractionDigits: 1 })
+/** @param {number|string|null|undefined} value */
+export function formatAreaM2(value) {
+  if (value == null || value === '') return '—'
+
+  let n
+  if (typeof value === 'number') {
+    n = value
+  } else {
+    const s = String(value).trim()
+    if (/^\d+\.\d{1,2}$/.test(s)) n = Number(s)
+    else if (/^\d+,\d{1,2}$/.test(s)) n = Number(s.replace(',', '.'))
+    else if (/^\d{1,3}(\.\d{3})+$/.test(s)) n = Number(s.replace(/\./g, ''))
+    else n = Number(s.replace(/\./g, '').replace(',', '.'))
+  }
+
+  if (!Number.isFinite(n)) return '—'
+  const formatted = Number.isInteger(n)
+    ? n.toLocaleString('pt-BR')
+    : n.toLocaleString('pt-BR', { minimumFractionDigits: 1, maximumFractionDigits: 1 })
   return `${formatted} m²`
+}
+
+/** @param {Imovel} imovel */
+export function formatArea(imovel) {
+  if (imovel == null || typeof imovel !== 'object') {
+    return formatAreaM2(imovel)
+  }
+  return formatAreaM2(imovel.areaM2)
 }
 
 /** @param {Imovel} imovel */

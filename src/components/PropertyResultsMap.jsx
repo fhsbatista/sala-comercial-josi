@@ -87,7 +87,7 @@ function PropertyMarker({ imovel }) {
       <Tooltip direction="top" offset={[0, -36]} opacity={0.95}>
         {`${avaliacaoPrefix(imovel.avaliacao)}${tooltipText}`}
       </Tooltip>
-      <Popup className="results-map-popup" minWidth={220} maxWidth={300}>
+      <Popup key={imovel.id} className="results-map-popup" minWidth={220} maxWidth={300}>
         <div className="results-map-popup__content">
           <strong className="results-map-popup__title">
             {imovel.avaliacao === 'gostei' && (
@@ -113,7 +113,7 @@ function PropertyMarker({ imovel }) {
             </div>
             <div>
               <dt>Área</dt>
-              <dd>{formatArea(imovel.areaM2)}</dd>
+              <dd>{formatArea(imovel)}</dd>
             </div>
             {imovel.distanciaKm != null && (
               <div>

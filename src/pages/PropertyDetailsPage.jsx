@@ -207,7 +207,7 @@ export default function PropertyDetailsPage() {
           <DetailItem label="Descrição" value={property.descricao} />
           <DetailItem label="Bairro" value={property.bairro} />
           <DetailItem label="Endereço" value={property.endereco} />
-          <DetailItem label="Área" value={formatArea(property.areaM2)} />
+          <DetailItem label="Área" value={formatArea(property)} />
           <DetailItem label="Aluguel" value={formatAluguel(property)} highlight />
           <DetailItem label="Preço por m²" value={precoM2 != null ? formatCurrency(precoM2) : '—'} />
           <DetailItem

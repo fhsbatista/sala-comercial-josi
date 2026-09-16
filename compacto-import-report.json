@@ -1,0 +1,546 @@
+{
+  "cadastrados": [
+    {
+      "id": 219,
+      "url": "https://www.compactoimoveis.com.br/alugar/Sao-Jose-do-Rio-Preto/Comercial/Salao/Centro/23252",
+      "codigo": "23252"
+    },
+    {
+      "id": 220,
+      "url": "https://www.compactoimoveis.com.br/alugar/Sao-Jose-do-Rio-Preto/Comercial/Salao/Centro/23575",
+      "codigo": "23575"
+    },
+    {
+      "id": 221,
+      "url": "https://www.compactoimoveis.com.br/alugar/Sao-Jose-do-Rio-Preto/Comercial/Salao/Centro/23743",
+      "codigo": "23743"
+    },
+    {
+      "id": 222,
+      "url": "https://www.compactoimoveis.com.br/alugar/Sao-Jose-do-Rio-Preto/Comercial/Salao/Centro/23744",
+      "codigo": "23744"
+    },
+    {
+      "id": 223,
+      "url": "https://www.compactoimoveis.com.br/alugar/Sao-Jose-do-Rio-Preto/Comercial/Salao/Centro/26524",
+      "codigo": "26524"
+    },
+    {
+      "id": 224,
+      "url": "https://www.compactoimoveis.com.br/alugar/Sao-Jose-do-Rio-Preto/Comercial/Salao/Centro/26525",
+      "codigo": "26525"
+    },
+    {
+      "id": 225,
+      "url": "https://www.compactoimoveis.com.br/alugar/Sao-Jose-do-Rio-Preto/Comercial/Salao/Eldorado/22442",
+      "codigo": "22442"
+    },
+    {
+      "id": 226,
+      "url": "https://www.compactoimoveis.com.br/alugar/Sao-Jose-do-Rio-Preto/Comercial/Salao/Estancia-Santa-Clara-Zona-Rural/25870",
+      "codigo": "25870"
+    },
+    {
+      "id": 227,
+      "url": "https://www.compactoimoveis.com.br/alugar/Sao-Jose-do-Rio-Preto/Comercial/Salao/Jardim-Alto-Rio-Preto/25925",
+      "codigo": "25925"
+    },
+    {
+      "id": 228,
+      "url": "https://www.compactoimoveis.com.br/alugar/Sao-Jose-do-Rio-Preto/Comercial/Salao/Jardim-America/22786",
+      "codigo": "22786"
+    },
+    {
+      "id": 229,
+      "url": "https://www.compactoimoveis.com.br/alugar/Sao-Jose-do-Rio-Preto/Comercial/Salao/Jardim-Canaa/23338",
+      "codigo": "23338"
+    },
+    {
+      "id": 230,
+      "url": "https://www.compactoimoveis.com.br/alugar/Sao-Jose-do-Rio-Preto/Comercial/Salao/Residencial-Jardim-Antonieta/27293",
+      "codigo": "27293"
+    },
+    {
+      "id": 231,
+      "url": "https://www.compactoimoveis.com.br/alugar/Sao-Jose-do-Rio-Preto/Comercial/Salao/Vila-Santa-Cruz/26144",
+      "codigo": "26144"
+    },
+    {
+      "id": 232,
+      "url": "https://www.compactoimoveis.com.br/alugar/Sao-Jose-do-Rio-Preto/Comercial/Salao/Vila-Santa-Cruz/26145",
+      "codigo": "26145"
+    },
+    {
+      "id": 233,
+      "url": "https://www.compactoimoveis.com.br/alugar/Sao-Jose-do-Rio-Preto/Comercial/Salao/Boa-Vista/19278",
+      "codigo": "19278"
+    },
+    {
+      "id": 234,
+      "url": "https://www.compactoimoveis.com.br/alugar/Sao-Jose-do-Rio-Preto/Comercial/Salao/Boa-Vista/20454",
+      "codigo": "20454"
+    },
+    {
+      "id": 235,
+      "url": "https://www.compactoimoveis.com.br/alugar/Sao-Jose-do-Rio-Preto/Comercial/Salao/Bom-Jardim/20745",
+      "codigo": "20745"
+    },
+    {
+      "id": 236,
+      "url": "https://www.compactoimoveis.com.br/alugar/Sao-Jose-do-Rio-Preto/Comercial/Salao/Centro/21732",
+      "codigo": "21732"
+    },
+    {
+      "id": 237,
+      "url": "https://www.compactoimoveis.com.br/alugar/Sao-Jose-do-Rio-Preto/Comercial/Salao/Eldorado/21870",
+      "codigo": "21870"
+    },
+    {
+      "id": 238,
+      "url": "https://www.compactoimoveis.com.br/alugar/Sao-Jose-do-Rio-Preto/Comercial/Salao/Jardim-Francisco-Fernandes/19311",
+      "codigo": "19311"
+    },
+    {
+      "id": 239,
+      "url": "https://www.compactoimoveis.com.br/alugar/Sao-Jose-do-Rio-Preto/Comercial/Salao/Jardim-Maria-Lucia/20260",
+      "codigo": "20260"
+    },
+    {
+      "id": 240,
+      "url": "https://www.compactoimoveis.com.br/alugar/Sao-Jose-do-Rio-Preto/Comercial/Salao/Jardim-Mugnaini/19275",
+      "codigo": "19275"
+    },
+    {
+      "id": 241,
+      "url": "https://www.compactoimoveis.com.br/alugar/Sao-Jose-do-Rio-Preto/Comercial/Salao/Jardim-Nazareth/21230",
+      "codigo": "21230"
+    },
+    {
+      "id": 242,
+      "url": "https://www.compactoimoveis.com.br/alugar/Sao-Jose-do-Rio-Preto/Comercial/Salao/Jardim-Sao-Marco/19671",
+      "codigo": "19671"
+    },
+    {
+      "id": 243,
+      "url": "https://www.compactoimoveis.com.br/alugar/Sao-Jose-do-Rio-Preto/Comercial/Salao/Parque-das-Amoras-II/19195",
+      "codigo": "19195"
+    },
+    {
+      "id": 244,
+      "url": "https://www.compactoimoveis.com.br/alugar/Sao-Jose-do-Rio-Preto/Comercial/Salao/Parque-Industrial/21717",
+      "codigo": "21717"
+    },
+    {
+      "id": 245,
+      "url": "https://www.compactoimoveis.com.br/alugar/Sao-Jose-do-Rio-Preto/Comercial/Salao/Parque-Industrial/21727",
+      "codigo": "21727"
+    },
+    {
+      "id": 246,
+      "url": "https://www.compactoimoveis.com.br/alugar/Sao-Jose-do-Rio-Preto/Comercial/Salao/Parque-Industrial/21729",
+      "codigo": "21729"
+    },
+    {
+      "id": 247,
+      "url": "https://www.compactoimoveis.com.br/alugar/Sao-Jose-do-Rio-Preto/Comercial/Salao/Residencial-Morada-do-Sol/20096",
+      "codigo": "20096"
+    },
+    {
+      "id": 248,
+      "url": "https://www.compactoimoveis.com.br/alugar/Sao-Jose-do-Rio-Preto/Comercial/Salao/Sao-Francisco/21112",
+      "codigo": "21112"
+    },
+    {
+      "id": 249,
+      "url": "https://www.compactoimoveis.com.br/alugar/Sao-Jose-do-Rio-Preto/Comercial/Salao/Setparque-Avenida-2/21469",
+      "codigo": "21469"
+    },
+    {
+      "id": 250,
+      "url": "https://www.compactoimoveis.com.br/alugar/Sao-Jose-do-Rio-Preto/Comercial/Salao/Solo-Sagrado-I/21894",
+      "codigo": "21894"
+    },
+    {
+      "id": 251,
+      "url": "https://www.compactoimoveis.com.br/alugar/Sao-Jose-do-Rio-Preto/Comercial/Salao/Vila-Anchieta/22099",
+      "codigo": "22099"
+    },
+    {
+      "id": 252,
+      "url": "https://www.compactoimoveis.com.br/alugar/Sao-Jose-do-Rio-Preto/Comercial/Salao/Vila-Bom-Jesus/19978",
+      "codigo": "19978"
+    },
+    {
+      "id": 253,
+      "url": "https://www.compactoimoveis.com.br/alugar/Sao-Jose-do-Rio-Preto/Comercial/Salao/Vila-Esplanada/21172",
+      "codigo": "21172"
+    },
+    {
+      "id": 254,
+      "url": "https://www.compactoimoveis.com.br/alugar/Sao-Jose-do-Rio-Preto/Comercial/Salao/Vila-Maceno/21242",
+      "codigo": "21242"
+    },
+    {
+      "id": 255,
+      "url": "https://www.compactoimoveis.com.br/alugar/Sao-Jose-do-Rio-Preto/Comercial/Salao/Vila-Redentora/21201",
+      "codigo": "21201"
+    },
+    {
+      "id": 256,
+      "url": "https://www.compactoimoveis.com.br/alugar/Sao-Jose-do-Rio-Preto/Comercial/Salao/Vila-Santo-Antonio/21645",
+      "codigo": "21645"
+    },
+    {
+      "id": 257,
+      "url": "https://www.compactoimoveis.com.br/alugar/Sao-Jose-do-Rio-Preto/Comercial/Salao/Boa-Vista/18735",
+      "codigo": "18735"
+    },
+    {
+      "id": 258,
+      "url": "https://www.compactoimoveis.com.br/alugar/Sao-Jose-do-Rio-Preto/Comercial/Salao/Boa-Vista/18736",
+      "codigo": "18736"
+    },
+    {
+      "id": 259,
+      "url": "https://www.compactoimoveis.com.br/alugar/Sao-Jose-do-Rio-Preto/Comercial/Salao/Boa-Vista/18737",
+      "codigo": "18737"
+    },
+    {
+      "id": 260,
+      "url": "https://www.compactoimoveis.com.br/alugar/Sao-Jose-do-Rio-Preto/Comercial/Salao/Boa-Vista/18738",
+      "codigo": "18738"
+    },
+    {
+      "id": 261,
+      "url": "https://www.compactoimoveis.com.br/alugar/Sao-Jose-do-Rio-Preto/Comercial/Salao/Centro-Engenheiro-Schmitt/18610",
+      "codigo": "18610"
+    },
+    {
+      "id": 262,
+      "url": "https://www.compactoimoveis.com.br/alugar/Sao-Jose-do-Rio-Preto/Comercial/Salao/Centro/17891",
+      "codigo": "17891"
+    },
+    {
+      "id": 263,
+      "url": "https://www.compactoimoveis.com.br/alugar/Sao-Jose-do-Rio-Preto/Comercial/Salao/Centro/18064",
+      "codigo": "18064"
+    },
+    {
+      "id": 264,
+      "url": "https://www.compactoimoveis.com.br/alugar/Sao-Jose-do-Rio-Preto/Comercial/Salao/Centro/18242",
+      "codigo": "18242"
+    },
+    {
+      "id": 265,
+      "url": "https://www.compactoimoveis.com.br/alugar/Sao-Jose-do-Rio-Preto/Comercial/Salao/Jardim-Maria-Candida/18544",
+      "codigo": "18544"
+    },
+    {
+      "id": 266,
+      "url": "https://www.compactoimoveis.com.br/alugar/Sao-Jose-do-Rio-Preto/Comercial/Salao/Jardim-Santa-Luzia/18829",
+      "codigo": "18829"
+    },
+    {
+      "id": 267,
+      "url": "https://www.compactoimoveis.com.br/alugar/Sao-Jose-do-Rio-Preto/Comercial/Salao/Jardim-Seyon/18815",
+      "codigo": "18815"
+    },
+    {
+      "id": 268,
+      "url": "https://www.compactoimoveis.com.br/alugar/Sao-Jose-do-Rio-Preto/Comercial/Salao/Jardim-Seyon/18816",
+      "codigo": "18816"
+    },
+    {
+      "id": 269,
+      "url": "https://www.compactoimoveis.com.br/alugar/Sao-Jose-do-Rio-Preto/Comercial/Salao/Jardim-Seyon/18818",
+      "codigo": "18818"
+    },
+    {
+      "id": 270,
+      "url": "https://www.compactoimoveis.com.br/alugar/Sao-Jose-do-Rio-Preto/Comercial/Salao/Parque-das-Amoras-II/17972",
+      "codigo": "17972"
+    },
+    {
+      "id": 271,
+      "url": "https://www.compactoimoveis.com.br/alugar/Sao-Jose-do-Rio-Preto/Comercial/Salao/Parque-das-Aroeiras/18532",
+      "codigo": "18532"
+    },
+    {
+      "id": 272,
+      "url": "https://www.compactoimoveis.com.br/alugar/Sao-Jose-do-Rio-Preto/Comercial/Salao/Parque-Industrial/18601",
+      "codigo": "18601"
+    },
+    {
+      "id": 273,
+      "url": "https://www.compactoimoveis.com.br/alugar/Sao-Jose-do-Rio-Preto/Comercial/Salao/Parque-Industrial/18602",
+      "codigo": "18602"
+    },
+    {
+      "id": 274,
+      "url": "https://www.compactoimoveis.com.br/alugar/Sao-Jose-do-Rio-Preto/Comercial/Salao/Parque-Industrial/18603",
+      "codigo": "18603"
+    },
+    {
+      "id": 275,
+      "url": "https://www.compactoimoveis.com.br/alugar/Sao-Jose-do-Rio-Preto/Comercial/Salao/Residencial-Palestra/18281",
+      "codigo": "18281"
+    },
+    {
+      "id": 276,
+      "url": "https://www.compactoimoveis.com.br/alugar/Sao-Jose-do-Rio-Preto/Comercial/Salao/Vila-Maceno/17799",
+      "codigo": "17799"
+    },
+    {
+      "id": 277,
+      "url": "https://www.compactoimoveis.com.br/alugar/Sao-Jose-do-Rio-Preto/Comercial/Salao/Vila-Maceno/17862",
+      "codigo": "17862"
+    },
+    {
+      "id": 278,
+      "url": "https://www.compactoimoveis.com.br/alugar/Sao-Jose-do-Rio-Preto/Comercial/Salao/Vila-Maceno/17863",
+      "codigo": "17863"
+    },
+    {
+      "id": 279,
+      "url": "https://www.compactoimoveis.com.br/alugar/Sao-Jose-do-Rio-Preto/Comercial/Salao/Centro/13571",
+      "codigo": "13571"
+    },
+    {
+      "id": 280,
+      "url": "https://www.compactoimoveis.com.br/alugar/Sao-Jose-do-Rio-Preto/Comercial/Salao/Centro/13575",
+      "codigo": "13575"
+    },
+    {
+      "id": 281,
+      "url": "https://www.compactoimoveis.com.br/alugar/Sao-Jose-do-Rio-Preto/Comercial/Salao/Centro/16932",
+      "codigo": "16932"
+    },
+    {
+      "id": 282,
+      "url": "https://www.compactoimoveis.com.br/alugar/Sao-Jose-do-Rio-Preto/Comercial/Salao/Centro/3171",
+      "codigo": "3171"
+    },
+    {
+      "id": 283,
+      "url": "https://www.compactoimoveis.com.br/alugar/Sao-Jose-do-Rio-Preto/Comercial/Salao/Centro/3961",
+      "codigo": "3961"
+    },
+    {
+      "id": 284,
+      "url": "https://www.compactoimoveis.com.br/alugar/Sao-Jose-do-Rio-Preto/Comercial/Salao/Centro/6707",
+      "codigo": "6707"
+    },
+    {
+      "id": 285,
+      "url": "https://www.compactoimoveis.com.br/alugar/Sao-Jose-do-Rio-Preto/Comercial/Salao/Centro/6828",
+      "codigo": "6828"
+    },
+    {
+      "id": 286,
+      "url": "https://www.compactoimoveis.com.br/alugar/Sao-Jose-do-Rio-Preto/Comercial/Salao/Centro/7283",
+      "codigo": "7283"
+    },
+    {
+      "id": 287,
+      "url": "https://www.compactoimoveis.com.br/alugar/Sao-Jose-do-Rio-Preto/Comercial/Salao/Jardim-Fuscaldo/12850",
+      "codigo": "12850"
+    },
+    {
+      "id": 288,
+      "url": "https://www.compactoimoveis.com.br/alugar/Sao-Jose-do-Rio-Preto/Comercial/Salao/Jardim-Maria-Lucia/4197",
+      "codigo": "4197"
+    },
+    {
+      "id": 289,
+      "url": "https://www.compactoimoveis.com.br/alugar/Sao-Jose-do-Rio-Preto/Comercial/Salao/Jardim-Maria-Lucia/6558",
+      "codigo": "6558"
+    },
+    {
+      "id": 290,
+      "url": "https://www.compactoimoveis.com.br/alugar/Sao-Jose-do-Rio-Preto/Comercial/Salao/Jardim-Nazareth/14836",
+      "codigo": "14836"
+    },
+    {
+      "id": 291,
+      "url": "https://www.compactoimoveis.com.br/alugar/Sao-Jose-do-Rio-Preto/Comercial/Salao/Jardim-Novo-Aeroporto/17447",
+      "codigo": "17447"
+    },
+    {
+      "id": 292,
+      "url": "https://www.compactoimoveis.com.br/alugar/Sao-Jose-do-Rio-Preto/Comercial/Salao/Posto-Martinelli/9200",
+      "codigo": "9200"
+    },
+    {
+      "id": 293,
+      "url": "https://www.compactoimoveis.com.br/alugar/Sao-Jose-do-Rio-Preto/Comercial/Salao/Residencial-Garcia/17047",
+      "codigo": "17047"
+    },
+    {
+      "id": 294,
+      "url": "https://www.compactoimoveis.com.br/alugar/Sao-Jose-do-Rio-Preto/Comercial/Salao/Santos-Dumont/16874",
+      "codigo": "16874"
+    },
+    {
+      "id": 295,
+      "url": "https://www.compactoimoveis.com.br/alugar/Sao-Jose-do-Rio-Preto/Comercial/Salao/Solo-Sagrado/16559",
+      "codigo": "16559"
+    },
+    {
+      "id": 296,
+      "url": "https://www.compactoimoveis.com.br/alugar/Sao-Jose-do-Rio-Preto/Comercial/Salao/Vila-Aeroporto/13593",
+      "codigo": "13593"
+    },
+    {
+      "id": 297,
+      "url": "https://www.compactoimoveis.com.br/alugar/Sao-Jose-do-Rio-Preto/Comercial/Salao/Vila-Maceno/17634",
+      "codigo": "17634"
+    },
+    {
+      "id": 298,
+      "url": "https://www.compactoimoveis.com.br/alugar/Sao-Jose-do-Rio-Preto/Comercial/Salao/Vila-Redentora/10785",
+      "codigo": "10785"
+    },
+    {
+      "id": 299,
+      "url": "https://www.compactoimoveis.com.br/alugar/Sao-Jose-do-Rio-Preto/Comercial/Salao/Vila-Santa-Cruz/16859",
+      "codigo": "16859"
+    },
+    {
+      "id": 300,
+      "url": "https://www.compactoimoveis.com.br/alugar/Sao-Jose-do-Rio-Preto/Comercial/Salao/Jardim-Urano/716",
+      "codigo": "716"
+    },
+    {
+      "id": 301,
+      "url": "https://www.compactoimoveis.com.br/alugar/Sao-Jose-do-Rio-Preto/Comercial/Salao/Parque-Industrial/299",
+      "codigo": "299"
+    }
+  ],
+  "duplicados": [
+    {
+      "url": "https://www.compactoimoveis.com.br/alugar/Sao-Jose-do-Rio-Preto/Comercial/Salao/Boa-Vista/25545",
+      "id": 205
+    },
+    {
+      "url": "https://www.compactoimoveis.com.br/alugar/Sao-Jose-do-Rio-Preto/Comercial/Salao/Estancia-Pica-pau-amarelo-Zona-Rural/25595",
+      "id": 206
+    },
+    {
+      "url": "https://www.compactoimoveis.com.br/alugar/Sao-Jose-do-Rio-Preto/Comercial/Salao/Jardim-Novo-Aeroporto/26899",
+      "id": 207
+    },
+    {
+      "url": "https://www.compactoimoveis.com.br/alugar/Sao-Jose-do-Rio-Preto/Comercial/Salao/Parque-Industrial/25546",
+      "id": 208
+    },
+    {
+      "url": "https://www.compactoimoveis.com.br/alugar/Sao-Jose-do-Rio-Preto/Comercial/Salao/Parque-Industrial/25547",
+      "id": 209
+    },
+    {
+      "url": "https://www.compactoimoveis.com.br/alugar/Sao-Jose-do-Rio-Preto/Comercial/Salao/Parque-Residencial-Nature-I/26236",
+      "id": 210
+    },
+    {
+      "url": "https://www.compactoimoveis.com.br/alugar/Sao-Jose-do-Rio-Preto/Comercial/Salao/Solo-Sagrado-I/26947",
+      "id": 211
+    },
+    {
+      "url": "https://www.compactoimoveis.com.br/alugar/Sao-Jose-do-Rio-Preto/Comercial/Salao/Vila-Moreira/27397",
+      "id": 212
+    },
+    {
+      "url": "https://www.compactoimoveis.com.br/alugar/Sao-Jose-do-Rio-Preto/Comercial/Salao/Vila-Redentora/25485",
+      "id": 213
+    },
+    {
+      "url": "https://www.compactoimoveis.com.br/alugar/Sao-Jose-do-Rio-Preto/Comercial/Salao/Vila-Santo-Antonio/26588",
+      "id": 214
+    },
+    {
+      "url": "https://www.compactoimoveis.com.br/alugar/Sao-Jose-do-Rio-Preto/Comercial/Salao/Centro/21821",
+      "id": 215
+    },
+    {
+      "url": "https://www.compactoimoveis.com.br/alugar/Sao-Jose-do-Rio-Preto/Comercial/Salao/Centro/18169",
+      "id": 153
+    },
+    {
+      "url": "https://www.compactoimoveis.com.br/alugar/Sao-Jose-do-Rio-Preto/Comercial/Salao/Jardim-Seyon/18106",
+      "id": 157
+    },
+    {
+      "url": "https://www.compactoimoveis.com.br/alugar/Sao-Jose-do-Rio-Preto/Comercial/Salao/Parque-das-Aroeiras/18545",
+      "id": 167
+    },
+    {
+      "url": "https://www.compactoimoveis.com.br/alugar/Sao-Jose-do-Rio-Preto/Comercial/Salao/Vila-Nossa-Senhora-do-Bonfim/1132",
+      "id": 216
+    },
+    {
+      "url": "https://www.compactoimoveis.com.br/alugar/Sao-Jose-do-Rio-Preto/Comercial/Salao/Centro/782",
+      "id": 217
+    },
+    {
+      "url": "https://www.compactoimoveis.com.br/alugar/Sao-Jose-do-Rio-Preto/Comercial/Salao/Jardim-Santa-Maria/78",
+      "id": 218
+    }
+  ],
+  "ignorados": [
+    {
+      "url": "https://www.compactoimoveis.com.br/comprar/Sao-Jose-do-Rio-Preto/Comercial/Salao/Centro/26574",
+      "motivo": "comprar/venda"
+    },
+    {
+      "url": "https://www.compactoimoveis.com.br/comprar/Sao-Jose-do-Rio-Preto/Comercial/Salao/Conjunto-Habitacional-Costa-do-Sol/27001",
+      "motivo": "comprar/venda"
+    },
+    {
+      "url": "https://www.compactoimoveis.com.br/comprar/Sao-Jose-do-Rio-Preto/Comercial/Salao/Jardim-Tarraf-II/26319",
+      "motivo": "comprar/venda"
+    },
+    {
+      "url": "https://www.compactoimoveis.com.br/comprar/Sao-Jose-do-Rio-Preto/Comercial/Salao/Jardim-Nunes/21284",
+      "motivo": "comprar/venda"
+    },
+    {
+      "url": "https://www.compactoimoveis.com.br/comprar/Sao-Jose-do-Rio-Preto/Comercial/Salao/Residencial-Ana-Celia/22241",
+      "motivo": "comprar/venda"
+    },
+    {
+      "url": "https://www.compactoimoveis.com.br/comprar/Sao-Jose-do-Rio-Preto/Comercial/Salao/Boa-Vista/18600",
+      "motivo": "comprar/venda"
+    },
+    {
+      "url": "https://www.compactoimoveis.com.br/comprar/Sao-Jose-do-Rio-Preto/Comercial/Salao/Vila-Maceno/17909",
+      "motivo": "comprar/venda"
+    },
+    {
+      "url": "https://www.compactoimoveis.com.br/comprar/Sao-Jose-do-Rio-Preto/Comercial/Salao/Centro/17453",
+      "motivo": "comprar/venda"
+    },
+    {
+      "url": "https://www.compactoimoveis.com.br/comprar/Sao-Jose-do-Rio-Preto/Comercial/Salao/Eldorado/13582",
+      "motivo": "comprar/venda"
+    },
+    {
+      "url": "https://www.compactoimoveis.com.br/comprar/Sao-Jose-do-Rio-Preto/Comercial/Salao/Residencial-Monterey/3314",
+      "motivo": "comprar/venda"
+    },
+    {
+      "url": "https://www.compactoimoveis.com.br/comprar/Sao-Jose-do-Rio-Preto/Comercial/Salao/Residencial-Palestra/12561",
+      "motivo": "comprar/venda"
+    },
+    {
+      "url": "https://www.compactoimoveis.com.br/comprar/Sao-Jose-do-Rio-Preto/Comercial/Salao/Residencial-Morada-do-Sol/640",
+      "motivo": "comprar/venda"
+    }
+  ],
+  "erros": [
+    {
+      "url": "https://www.compactoimoveis.com.br/alugar/Sao-Jose-do-Rio-Preto/Comercial/Salao/Centro/7284",
+      "codigo": "7284",
+      "error": "fetch failed"
+    }
+  ]
+}

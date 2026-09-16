@@ -61,10 +61,8 @@ Se aparecer `EADDRINUSE` na porta 3001, o Docker (ou outro processo) ainda está
 | `npm run build` | Build do frontend |
 | `npm start` | Servidor de produção (serve API + dist) |
 | `npm run db:migrate` | Executa migrações |
-| `npm run db:seed` | Insere os 28 imóveis iniciais (idempotente) |
-| `npm run db:setup` | migrate + seed |
+| `npm run db:setup` | Executa migrações (banco inicia vazio) |
 | `npm test` | Testes automatizados |
-| `npm run validate:seed` | Valida arquivo de seed |
 | `npm run lint` | ESLint |
 
 ## Rotas do frontend
@@ -134,19 +132,17 @@ Serviços com filesystem efêmero perdem o banco a cada redeploy.
 ```
 server/           API Express + SQLite
   migrations/     Schema SQL versionado
-  seeds/          Dados iniciais (28 imóveis)
 src/
   pages/          Dashboard, cadastro, detalhes
   components/     Tabela, cards, formulário, mapa
   api/            Cliente HTTP
-  data/imoveis.js Fonte do seed (não usada em runtime)
+  data/imoveis.js Metadados públicos (referência LOAD)
 ```
 
 ## Manutenção da base
 
-1. Imóveis iniciais: editar `src/data/imoveis.js` e rodar `npm run db:seed`
-2. Novos imóveis: cadastrar pela interface ou `POST /api/properties`
-3. Validar seed: `npm run validate:seed`
+1. Imóveis: cadastrar pela interface ou `POST /api/properties`
+2. Banco versionado: `data/imoveis.sqlite` (copie ou restaure em novos ambientes)
 
 ## Histórico
 
