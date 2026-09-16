@@ -41,6 +41,8 @@ Content-Type: application/json
 - `tipoUrl`: `individual` ou `busca`.
 - `status`: `verificado`, `não verificado`, `link de busca` ou `possivelmente expirado`.
 - Coordenadas são opcionais, mas latitude e longitude devem ser enviadas juntas.
+- Quando o anúncio informar só o bairro, geocodifique o centro aproximado do bairro e envie `latitude`/`longitude`; documente a precisão em `observacoes`.
+- Em lote, deduplique bairros antes de geocodificar (uma consulta por bairro distinto).
 - Campos opcionais sem valor podem ser `null`.
 
 ## Consulta e deduplicação

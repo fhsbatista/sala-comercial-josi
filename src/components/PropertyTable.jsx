@@ -4,6 +4,7 @@ import {
   formatArea,
   formatCurrency,
   formatDistancia,
+  formatGostei,
   getPrecoM2,
   getVerifyLabel,
   isMuitoProximo,
@@ -31,8 +32,9 @@ export default function PropertyTable({ imoveis }) {
             <th>Aluguel</th>
             <th>Preço/m²</th>
             <th>Distância da LOAD</th>
+            <th>Gostei</th>
             <th>Status</th>
-            <th>Ações</th>
+            <th className="property-table__col-actions">Ações</th>
           </tr>
         </thead>
         <tbody>
@@ -62,11 +64,16 @@ export default function PropertyTable({ imoveis }) {
                   </span>
                 </td>
                 <td>
+                  <span className={`liked-badge${imovel.liked ? ' liked-badge--yes' : ''}`}>
+                    {formatGostei(imovel)}
+                  </span>
+                </td>
+                <td>
                   <span className={`status-badge status-badge--${statusClass(imovel.status)}`}>
                     {STATUS_LABEL[imovel.status] ?? imovel.status}
                   </span>
                 </td>
-                <td>
+                <td className="property-table__col-actions">
                   <div className="actions">
                     <Link
                       to={`/imoveis/${imovel.id}`}

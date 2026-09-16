@@ -2,60 +2,24 @@ import { useEffect } from 'react'
 import { MapContainer, TileLayer, Marker, Popup, Polyline, useMap } from 'react-leaflet'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
+import {
+  createPinIconWithLabel,
+  createPropertyDetailPinIcon,
+  MAP_MARKER_COLORS,
+  MAP_MARKER_LABELS,
+} from '../utils/mapPins.js'
 
 const MARKERS = {
   load: {
-    color: '#2563eb',
-    label: 'LOAD Facility',
+    color: MAP_MARKER_COLORS.load,
+    label: MAP_MARKER_LABELS.load,
     popupTitle: 'LOAD Facility',
     popupDetail: 'Ponto de referência da pesquisa',
   },
   property: {
-    color: '#059669',
-    label: 'Imóvel',
+    color: MAP_MARKER_COLORS.property,
     popupTitle: 'Imóvel',
   },
-}
-
-function escapeHtml(text) {
-  return String(text)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-}
-
-function truncateLabel(text, max = 22) {
-  if (!text) return 'Imóvel'
-  return text.length > max ? `${text.slice(0, max - 1)}…` : text
-}
-
-function createPinIcon(label, color) {
-  const safeLabel = escapeHtml(label)
-  const pinHeight = 36
-  const pinWidth = 24
-  const labelHeight = 22
-  const gap = 4
-  const totalHeight = labelHeight + gap + pinHeight
-  const totalWidth = 120
-
-  const html = `
-    <div class="map-marker-wrap" style="width:${totalWidth}px;height:${totalHeight}px">
-      <span class="map-marker-wrap__label" style="background:${color}">${safeLabel}</span>
-      <svg class="map-marker-wrap__pin" width="${pinWidth}" height="${pinHeight}" viewBox="0 0 24 36" aria-hidden="true">
-        <path d="M12 0C5.373 0 0 5.373 0 12c0 9 12 24 12 24s12-15 12-24C24 5.373 18.627 0 12 0z" fill="${color}" stroke="#ffffff" stroke-width="1.5"/>
-        <circle cx="12" cy="12" r="4.5" fill="#ffffff" fill-opacity="0.95"/>
-      </svg>
-    </div>
-  `
-
-  return L.divIcon({
-    className: '',
-    html,
-    iconSize: [totalWidth, totalHeight],
-    iconAnchor: [totalWidth / 2, totalHeight],
-    popupAnchor: [0, -totalHeight + 4],
-  })
 }
 
 function FitBounds({ loadCoordinates, propertyCoordinates }) {
@@ -83,8 +47,6 @@ export default function PropertyMap({ loadCoordinates, propertyCoordinates, prop
     [propertyCoordinates.lat, propertyCoordinates.lng],
   ]
 
-  const propertyPinLabel = truncateLabel(propertyLabel)
-
   return (
     <div className="property-map">
       <MapContainer center={center} zoom={14} scrollWheelZoom={false} className="property-map__canvas">
@@ -104,7 +66,7 @@ export default function PropertyMap({ loadCoordinates, propertyCoordinates, prop
         />
         <Marker
           position={[loadCoordinates.lat, loadCoordinates.lng]}
-          icon={createPinIcon(MARKERS.load.label, MARKERS.load.color)}
+          icon={createPinIconWithLabel(MARKERS.load.label, MARKERS.load.color)}
         >
           <Popup>
             <strong>{MARKERS.load.popupTitle}</strong>
@@ -114,7 +76,7 @@ export default function PropertyMap({ loadCoordinates, propertyCoordinates, prop
         </Marker>
         <Marker
           position={[propertyCoordinates.lat, propertyCoordinates.lng]}
-          icon={createPinIcon(propertyPinLabel, MARKERS.property.color)}
+          icon={createPropertyDetailPinIcon(propertyLabel)}
         >
           <Popup>
             <strong>{MARKERS.property.popupTitle}</strong>

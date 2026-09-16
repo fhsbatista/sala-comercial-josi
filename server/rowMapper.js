@@ -22,6 +22,7 @@ export function rowToProperty(row) {
     status: row.status,
     ultimaVerificacao: row.ultima_verificacao,
     observacoes: row.observacoes,
+    liked: Boolean(row.liked),
     createdAt: row.created_at,
     updatedAt: row.updated_at,
   }
@@ -45,5 +46,6 @@ export function propertyToRow(property) {
     status: property.status,
     ultima_verificacao: property.ultimaVerificacao ?? null,
     observacoes: property.observacoes ?? null,
+    liked: property.liked ? 1 : 0,
   }
 }

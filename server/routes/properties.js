@@ -29,6 +29,10 @@ const DELETE_BY_ID = `
   DELETE FROM properties WHERE id = ?
 `
 
+const UPDATE_LIKED = `
+  UPDATE properties SET liked = ?, updated_at = datetime('now') WHERE id = ?
+`
+
 router.get('/', (_req, res) => {
   const db = getDb()
   const rows = db.prepare(SELECT_ALL).all()
@@ -82,6 +86,26 @@ router.post('/', (req, res) => {
 
   const created = db.prepare(SELECT_BY_ID).get(nextId)
   res.status(201).json({ data: rowToProperty(created) })
+})
+
+router.patch('/:id/liked', (req, res) => {
+  const db = getDb()
+  const id = Number(req.params.id)
+  if (!Number.isInteger(id) || id <= 0) {
+    return res.status(400).json({ error: 'ID inválido' })
+  }
+  if (typeof req.body.liked !== 'boolean') {
+    return res.status(400).json({ error: 'Dados inválidos', fields: { liked: 'Deve ser booleano' } })
+  }
+
+  const existing = db.prepare(SELECT_BY_ID).get(id)
+  if (!existing) {
+    return res.status(404).json({ error: 'Imóvel não encontrado' })
+  }
+
+  db.prepare(UPDATE_LIKED).run(req.body.liked ? 1 : 0, id)
+  const updated = db.prepare(SELECT_BY_ID).get(id)
+  res.json({ data: rowToProperty(updated) })
 })
 
 router.delete('/:id', (req, res) => {

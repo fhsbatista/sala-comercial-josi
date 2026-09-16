@@ -4,6 +4,7 @@ import {
   formatArea,
   formatCurrency,
   formatDistancia,
+  formatGostei,
   getPrecoM2,
   getVerifyLabel,
   isMuitoProximo,
@@ -52,6 +53,14 @@ export default function PropertyCard({ imovel }) {
           <dd>
             <span className={`prox-badge prox-badge--${imovel.proximidade}`}>
               {formatDistancia(imovel)}
+            </span>
+          </dd>
+        </div>
+        <div>
+          <dt>Gostei</dt>
+          <dd>
+            <span className={`liked-badge${imovel.liked ? ' liked-badge--yes' : ''}`}>
+              {formatGostei(imovel)}
             </span>
           </dd>
         </div>

@@ -1,4 +1,4 @@
-import { SORT_OPTIONS } from '../utils/imoveis.js'
+import { LIKED_FILTER_OPTIONS, SORT_OPTIONS } from '../utils/imoveis.js'
 
 export default function Filters({
   filtros,
@@ -26,6 +26,25 @@ export default function Filters({
       </div>
 
       <div className="filters__grid">
+        <div className="field field--segmented field--wide">
+          <span>Gostei</span>
+          <div className="segmented-control" role="group" aria-label="Filtrar por gostei">
+            {LIKED_FILTER_OPTIONS.map((option) => (
+              <button
+                key={option.value}
+                type="button"
+                className={`segmented-control__option${
+                  filtros.gostei === option.value ? ' segmented-control__option--active' : ''
+                }`}
+                aria-pressed={filtros.gostei === option.value}
+                onClick={() => handleChange('gostei', option.value)}
+              >
+                {option.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
         <label className="field field--wide">
           <span>Busca textual</span>
           <input

@@ -35,6 +35,15 @@ export async function deleteProperty(id) {
   return handleResponse(response)
 }
 
+export async function updatePropertyLiked(id, liked) {
+  const response = await fetch(`/api/properties/${id}/liked`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ liked }),
+  })
+  return handleResponse(response)
+}
+
 export async function fetchAppConfig() {
   const response = await fetch('/api/config')
   return handleResponse(response)

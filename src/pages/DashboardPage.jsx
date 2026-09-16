@@ -3,6 +3,7 @@ import { fetchAppConfig, fetchProperties } from '../api/properties.js'
 import Filters from '../components/Filters.jsx'
 import PropertyTable from '../components/PropertyTable.jsx'
 import PropertyCard from '../components/PropertyCard.jsx'
+import PropertyResultsMap from '../components/PropertyResultsMap.jsx'
 import DataIntegrity from '../components/DataIntegrity.jsx'
 import { enrichWithDistance } from '../utils/geo.js'
 import {
@@ -23,6 +24,7 @@ export default function DashboardPage() {
   const [error, setError] = useState(null)
   const [filtros, setFiltros] = useState({ ...DEFAULT_FILTERS })
   const [sortBy, setSortBy] = useState('proximidade_asc')
+  const [viewMode, setViewMode] = useState('lista')
 
   const loadData = useCallback(async () => {
     setLoading(true)
@@ -150,22 +152,61 @@ export default function DashboardPage() {
           totalCount={enriched.length}
         />
 
-        <section className="results" aria-label="Lista de imóveis">
-          <div className="results__desktop">
-            <PropertyTable imoveis={filtered} />
+        <section className="results" aria-label="Resultados de imóveis">
+          <div className="results__toolbar">
+            <div
+              className="segmented-control results__view-toggle"
+              role="group"
+              aria-label="Modo de visualização dos resultados"
+            >
+              <button
+                type="button"
+                className={`segmented-control__option${
+                  viewMode === 'lista' ? ' segmented-control__option--active' : ''
+                }`}
+                aria-pressed={viewMode === 'lista'}
+                onClick={() => setViewMode('lista')}
+              >
+                Lista
+              </button>
+              <button
+                type="button"
+                className={`segmented-control__option${
+                  viewMode === 'mapa' ? ' segmented-control__option--active' : ''
+                }`}
+                aria-pressed={viewMode === 'mapa'}
+                onClick={() => setViewMode('mapa')}
+              >
+                Mapa
+              </button>
+            </div>
           </div>
-          <div className="results__mobile">
-            {filtered.length === 0 ? (
-              <div className="empty-state">
-                <p>Nenhum imóvel encontrado com os filtros atuais.</p>
-                <p className="empty-state__hint">Tente ajustar ou limpar os filtros.</p>
+
+          {viewMode === 'lista' ? (
+            <>
+              <div className="results__desktop">
+                <PropertyTable imoveis={filtered} />
               </div>
-            ) : (
-              filtered.map((imovel) => (
-                <PropertyCard key={imovel.id} imovel={imovel} />
-              ))
-            )}
-          </div>
+              <div className="results__mobile">
+                {filtered.length === 0 ? (
+                  <div className="empty-state">
+                    <p>Nenhum imóvel encontrado com os filtros atuais.</p>
+                    <p className="empty-state__hint">Tente ajustar ou limpar os filtros.</p>
+                  </div>
+                ) : (
+                  filtered.map((imovel) => (
+                    <PropertyCard key={imovel.id} imovel={imovel} />
+                  ))
+                )}
+              </div>
+            </>
+          ) : (
+            <PropertyResultsMap
+              imoveis={filtered}
+              loadCoordinates={appConfig?.loadCoordinates ?? null}
+              onBackToList={() => setViewMode('lista')}
+            />
+          )}
         </section>
 
         <DataIntegrity stats={integrity} />

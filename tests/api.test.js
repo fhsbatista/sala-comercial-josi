@@ -125,6 +125,29 @@ describe('API', () => {
 
     assert.equal(res.status, 201)
     assert.equal(res.body.data.areaM2, 20)
+    assert.equal(res.body.data.liked, false)
+  })
+
+  it('PATCH /api/properties/:id/liked updates the liked flag', async () => {
+    const liked = await request(app)
+      .patch('/api/properties/1/liked')
+      .send({ liked: true })
+
+    assert.equal(liked.status, 200)
+    assert.equal(liked.body.data.liked, true)
+
+    const fetched = await request(app).get('/api/properties/1')
+    assert.equal(fetched.body.data.liked, true)
+
+    const invalid = await request(app)
+      .patch('/api/properties/1/liked')
+      .send({ liked: 'yes' })
+    assert.equal(invalid.status, 400)
+
+    const missing = await request(app)
+      .patch('/api/properties/9999/liked')
+      .send({ liked: true })
+    assert.equal(missing.status, 404)
   })
 
   it('DELETE /api/properties/:id removes property or returns 404', async () => {

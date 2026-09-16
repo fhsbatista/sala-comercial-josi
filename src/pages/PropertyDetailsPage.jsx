@@ -1,6 +1,11 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
-import { deleteProperty, fetchAppConfig, fetchProperty } from '../api/properties.js'
+import {
+  deleteProperty,
+  fetchAppConfig,
+  fetchProperty,
+  updatePropertyLiked,
+} from '../api/properties.js'
 import PropertyMap from '../components/PropertyMap.jsx'
 import { formatDistanceKm, haversineKm } from '../utils/geo.js'
 import {
@@ -22,6 +27,7 @@ export default function PropertyDetailsPage() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [deleting, setDeleting] = useState(false)
+  const [updatingLiked, setUpdatingLiked] = useState(false)
 
   const loadData = useCallback(async () => {
     setLoading(true)
@@ -63,6 +69,21 @@ export default function PropertyDetailsPage() {
     }
   }
 
+  async function handleLiked() {
+    if (!property) return
+
+    setUpdatingLiked(true)
+    setError(null)
+    try {
+      const updated = await updatePropertyLiked(property.id, !property.liked)
+      setProperty(updated)
+    } catch (err) {
+      setError(err.message || 'Erro ao atualizar gostei')
+    } finally {
+      setUpdatingLiked(false)
+    }
+  }
+
   const distanceKm = useMemo(() => {
     if (!property?.coordenadas || !appConfig?.loadCoordinates) return null
     return haversineKm(appConfig.loadCoordinates, property.coordenadas)
@@ -96,6 +117,15 @@ export default function PropertyDetailsPage() {
             <p className="details-page__meta">{property.imobiliaria} · ID {property.id}</p>
           </div>
           <div className="details-page__actions">
+            <button
+              type="button"
+              className={`btn btn--liked${property.liked ? ' btn--liked-active' : ''}`}
+              onClick={handleLiked}
+              disabled={updatingLiked}
+              aria-pressed={property.liked}
+            >
+              {updatingLiked ? 'Salvando...' : property.liked ? '♥ Gostei' : '♡ Gostei'}
+            </button>
             <a
               href={property.url}
               target="_blank"

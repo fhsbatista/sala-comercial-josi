@@ -28,6 +28,12 @@ export const STATUS_LABEL = {
   'possivelmente expirado': 'Possivelmente expirado',
 }
 
+export const LIKED_FILTER_OPTIONS = [
+  { value: 'todos', label: 'Todos' },
+  { value: 'gostei', label: 'Gostei' },
+  { value: 'nao_gostei', label: 'Não gostei' },
+]
+
 export const SORT_OPTIONS = [
   { value: 'proximidade_asc', label: 'Proximidade da LOAD (mais próximo)' },
   { value: 'preco_asc', label: 'Preço (menor)' },
@@ -102,6 +108,7 @@ export function filterImoveis(lista, filtros) {
     areaMin = '',
     areaMax = '',
     status = '',
+    gostei = 'todos',
   } = filtros
 
   const buscaNorm = normalizeText(busca.trim())
@@ -117,6 +124,8 @@ export function filterImoveis(lista, filtros) {
     if (imobiliaria && imovel.imobiliaria !== imobiliaria) return false
     if (bairro && imovel.bairro !== bairro) return false
     if (status && imovel.status !== status) return false
+    if (gostei === 'gostei' && !imovel.liked) return false
+    if (gostei === 'nao_gostei' && imovel.liked) return false
 
     if (aluguelMin !== '' && imovel.aluguel < Number(aluguelMin)) return false
     if (aluguelMax !== '' && imovel.aluguel > Number(aluguelMax)) return false
@@ -215,6 +224,11 @@ export function isMuitoProximo(imovel) {
   return imovel.proximidade === 'muito_proximo'
 }
 
+/** @param {Imovel} imovel */
+export function formatGostei(imovel) {
+  return imovel.liked ? '♥ Gostei' : '—'
+}
+
 export const DEFAULT_FILTERS = {
   busca: '',
   imobiliaria: '',
@@ -224,4 +238,5 @@ export const DEFAULT_FILTERS = {
   areaMin: '',
   areaMax: '',
   status: '',
+  gostei: 'todos',
 }
