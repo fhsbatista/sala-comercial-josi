@@ -22,6 +22,7 @@ export function rowToProperty(row) {
     ultimaVerificacao: row.ultima_verificacao,
     observacoes: row.observacoes,
     avaliacao: row.avaliacao ?? null,
+    fotos: row.fotos ?? [],
     createdAt: row.created_at,
     updatedAt: row.updated_at,
   }

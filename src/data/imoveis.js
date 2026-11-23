@@ -21,6 +21,7 @@ export const META = {
  * @property {number|null} distanciaKm
  * @property {'gostei'|'descartado'|null} [avaliacao]
  * @property {{ lat: number, lng: number }|null} coordenadas
+ * @property {string[]} [fotos]
  * @property {string} url
  * @property {'individual'|'busca'} tipoUrl
  * @property {'verificado'|'não verificado'|'link de busca'|'possivelmente expirado'} status

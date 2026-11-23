@@ -13,7 +13,8 @@
     "lint": "eslint .",
     "test": "node --test",
     "db:migrate": "node server/migrate.js",
-    "db:setup": "npm run db:migrate"
+    "db:setup": "npm run db:migrate",
+    "photos:sync": "node scripts/sync-property-photos.mjs"
   },
   "dependencies": {
     "better-sqlite3": "^11.10.0",

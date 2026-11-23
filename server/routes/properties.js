@@ -2,6 +2,7 @@ import { Router } from 'express'
 import { getDb } from '../db.js'
 import { rowToProperty } from '../rowMapper.js'
 import { validatePropertyInput } from '../validation/property.js'
+import { getAllPhotosGrouped, getPhotosForProperties } from '../photos/repository.js'
 
 const router = Router()
 
@@ -38,7 +39,13 @@ const UPDATE_AVALIACAO = `
 router.get('/', (_req, res) => {
   const db = getDb()
   const rows = db.prepare(SELECT_ALL).all()
-  res.json({ data: rows.map(rowToProperty) })
+  const photosById = getAllPhotosGrouped(db)
+  res.json({
+    data: rows.map((row) => rowToProperty({
+      ...row,
+      fotos: photosById.get(row.id) ?? [],
+    })),
+  })
 })
 
 router.get('/:id', (req, res) => {
@@ -53,7 +60,8 @@ router.get('/:id', (req, res) => {
     return res.status(404).json({ error: 'Imóvel não encontrado' })
   }
 
-  res.json({ data: rowToProperty(row) })
+  const photos = getPhotosForProperties(db, [id]).get(id) ?? []
+  res.json({ data: rowToProperty({ ...row, fotos: photos }) })
 })
 
 router.post('/', (req, res) => {

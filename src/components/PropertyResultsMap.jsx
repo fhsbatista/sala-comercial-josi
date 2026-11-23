@@ -13,6 +13,7 @@ import {
 } from '../utils/mapPins.js'
 import { isValidCoordinate, partitionByValidCoordinates } from '../utils/mapCoordinates.js'
 import { formatAluguel, formatArea, formatDistancia } from '../utils/imoveis.js'
+import PhotoCarousel from './PhotoCarousel.jsx'
 
 const DEFAULT_LOAD_ZOOM = 14
 
@@ -87,8 +88,9 @@ function PropertyMarker({ imovel }) {
       <Tooltip direction="top" offset={[0, -36]} opacity={0.95}>
         {`${avaliacaoPrefix(imovel.avaliacao)}${tooltipText}`}
       </Tooltip>
-      <Popup key={imovel.id} className="results-map-popup" minWidth={220} maxWidth={300}>
+      <Popup key={imovel.id} className="results-map-popup" minWidth={240} maxWidth={320}>
         <div className="results-map-popup__content">
+          <PhotoCarousel key={imovel.id} fotos={imovel.fotos} alt={imovel.descricao} />
           <strong className="results-map-popup__title">
             {imovel.avaliacao === 'gostei' && (
               <span className="results-map-popup__avaliacao results-map-popup__avaliacao--gostei" aria-hidden="true">♥ </span>
