@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 
-export default function PhotoCarousel({ fotos, alt }) {
+export default function PhotoCarousel({ fotos, alt, variant = 'popup' }) {
   const images = useMemo(() => (fotos ?? []).filter(Boolean), [fotos])
   const [index, setIndex] = useState(0)
 
@@ -24,7 +24,12 @@ export default function PhotoCarousel({ fotos, alt }) {
   }
 
   return (
-    <div className="photo-carousel" role="region" aria-roledescription="carrossel" aria-label={`Fotos: ${alt}`}>
+    <div
+      className={`photo-carousel${variant === 'detail' ? ' photo-carousel--detail' : ''}`}
+      role="region"
+      aria-roledescription="carrossel"
+      aria-label={`Fotos: ${alt}`}
+    >
       <div className="photo-carousel__viewport">
         <img
           className="photo-carousel__image"

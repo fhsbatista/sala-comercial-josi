@@ -119,7 +119,8 @@ router.patch('/:id/avaliacao', (req, res) => {
 
   db.prepare(UPDATE_AVALIACAO).run(avaliacao, id)
   const updated = db.prepare(SELECT_BY_ID).get(id)
-  res.json({ data: rowToProperty(updated) })
+  const photos = getPhotosForProperties(db, [id]).get(id) ?? []
+  res.json({ data: rowToProperty({ ...updated, fotos: photos }) })
 })
 
 router.delete('/:id', (req, res) => {

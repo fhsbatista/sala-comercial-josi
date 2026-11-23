@@ -7,6 +7,7 @@ import {
   updatePropertyAvaliacao,
 } from '../api/properties.js'
 import PropertyMap from '../components/PropertyMap.jsx'
+import PhotoCarousel from '../components/PhotoCarousel.jsx'
 import { formatDistanceKm, haversineKm } from '../utils/geo.js'
 import {
   formatAluguel,
@@ -174,6 +175,16 @@ export default function PropertyDetailsPage() {
         </div>
 
         {error && <div className="error-banner">{error}</div>}
+
+        <section className="details-page__photos" aria-label="Fotos do imóvel">
+          <h2>Fotos</h2>
+          <PhotoCarousel
+            key={property.id}
+            fotos={property.fotos}
+            alt={property.descricao}
+            variant="detail"
+          />
+        </section>
 
         {canShowMap && (
           <section className="details-page__map-section" aria-label="Mapa de proximidade">

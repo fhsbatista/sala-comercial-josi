@@ -859,6 +859,23 @@ body {
   color: var(--color-text-muted);
 }
 
+.photo-carousel--detail .photo-carousel--empty {
+  min-height: 220px;
+}
+
+.photo-carousel--detail .photo-carousel__image {
+  max-height: min(420px, 55vh);
+}
+
+.details-page__photos {
+  margin-bottom: 1.25rem;
+}
+
+.details-page__photos h2 {
+  margin: 0 0 0.6rem;
+  font-size: 1.1rem;
+}
+
 .results-map-popup__content {
   font-size: 0.875rem;
   line-height: 1.45;
